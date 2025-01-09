@@ -7,7 +7,7 @@
 
 # ! When used in other repo: Replace the github repo info and postprocessor url (L76)
 [remote.github]
-owner = "endrl"
+owner = "intro-skipper"
 repo = "segment-editor"
 
 [changelog]
@@ -73,7 +73,7 @@ footer = """
 trim = true
 # postprocessors
 postprocessors = [
-  { pattern = '<REPO>', replace = "https://github.com/endrl/segment-editor" }, # replace repository URL
+  { pattern = '<REPO>', replace = "https://github.com/intro-skipper/segment-editor" }, # replace repository URL
 ]
 
 [git]
