@@ -14,6 +14,7 @@ declare module 'vue' {
     BlurhashImage: typeof import('./../components/image/BlurhashImage.vue')['default']
     EditorSeasons: typeof import('./../components/segment/EditorSeasons.vue')['default']
     EdlDialog: typeof import('./../components/plugins/EdlDialog.vue')['default']
+    ChapterDialog: typeof import('./../components/plugins/ChapterDialog.vue')['default']
     FilterView: typeof import('./../components/FilterView.vue')['default']
     IMdiChevronLeft: typeof import('~icons/mdi/chevron-left')['default']
     IMdiClose: typeof import('~icons/mdi/close')['default']

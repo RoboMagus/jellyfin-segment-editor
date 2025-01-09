@@ -3,6 +3,7 @@
 
   <div class="q-mt-sm">
     <q-toggle :label="t('plugin.edl.enable')" v-model="appStore.enableEdl" />
+    <q-toggle :label="t('plugin.chapter.enable')" v-model="appStore.enableChapter" />
 
     <div class="row">
       <div class="q-mt-sm">{{ t('app.plugins.title') }} </div>
@@ -11,7 +12,7 @@
     </div>
 
     <div class="q-ma-sm">
-      <a href="https://github.com/endrl/jellyfin-plugin-ms-api?tab=readme-ov-file#jellyfin-plugin-mediasegments-api"
+      <a href="https://github.com/intro-skipper/jellyfin-plugin-ms-api?tab=readme-ov-file#jellyfin-plugin-mediasegments-api"
         target="_blank">
         <q-badge :color="pluginStore.pluginSegmentsApiInstalled ? 'green' : 'red'" rounded
           class="q-mr-sm" />MediaSegments
@@ -21,10 +22,17 @@
       </a>
     </div>
     <div class="q-ma-sm">
-      <a href="https://github.com/endrl/jellyfin-plugin-edl?tab=readme-ov-file#jellyfin-plugin-edl" target="_blank">
+      <a href="https://github.com/intro-skipper/jellyfin-plugin-edl?tab=readme-ov-file#jellyfin-plugin-edl" target="_blank">
         <q-badge :color="pluginStore.pluginEdlInstalled ? 'green' : 'orange'" rounded class="q-mr-sm" />Edl
         {{
       pluginStore.pluginEdlInstalled ? `(${pluginStore.pluginEdlVersion})` : '' }}
+      </a>
+    </div>
+    <div class="q-ma-sm">
+      <a href="https://github.com/intro-skipper/jellyfin-plugin-ms-chapter?tab=readme-ov-file#chapter-creator-for-jellyfin-mediasegments" target="_blank">
+        <q-badge :color="pluginStore.pluginChapterInstalled ? 'green' : 'orange'" rounded class="q-mr-sm" />Chapter Creator
+        {{
+      pluginStore.pluginChapterInstalled ? `(${pluginStore.pluginChapterVersion})` : '' }}
       </a>
     </div>
   </div>

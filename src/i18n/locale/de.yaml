@@ -56,3 +56,6 @@ plugin:
   edl:
     enable: EDL Unterstützung
     created: Edl Datei wurde erstellt
+  chapter:
+    enable: Kapitelersteller
+    created: Kapiteldatei erstellt

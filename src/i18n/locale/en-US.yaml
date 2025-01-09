@@ -53,5 +53,8 @@ close: Close
 back: Back
 plugin:
   edl:
-    enable: EDL support
+    enable: EDL Support
     created: Edl file created
+  chapter:
+    enable: Chapter Creator
+    created: Chapter file created
