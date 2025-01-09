@@ -32,7 +32,8 @@ export function useApi() {
     const query: Map<string, any> = new Map();
     query.set('parentId', collectionId);
     query.set('fields', 'MediaStreams')
-    query.set('sortBy','AiredEpisodeOrder,SortName')
+    query.set('sortBy', 'AiredEpisodeOrder,SortName')
+    query.set('isMissing', false) // Not filtered by missing items
     if (index != undefined) {
       // TODO all broken?!?!
       //query.set('startIndex', index)
