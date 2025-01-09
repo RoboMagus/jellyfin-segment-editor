@@ -1,5 +1,5 @@
 login:
-  api_key: Jellyfin API key
+  api_key: Jellyfin API Key
   server_address: Jellyfin Server Address
   test_conn: Test Connection
   validation:
