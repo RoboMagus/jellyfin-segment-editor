@@ -32,5 +32,5 @@ export const useAppStore = defineStore('app', () => {
   // watch user lang changes
   watch(selectedLocale, setLocale)
 
-  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, setTheme, setLocale, SUPPORTED_LOCALES }
+  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, enableChapter, setTheme, setLocale, SUPPORTED_LOCALES }
 })
