@@ -1,8 +1,9 @@
 # build
 FROM node:20.9-alpine as build-step
 
-LABEL org.opencontainers.image.description="https://github.com/endrl/segment-editor"
+LABEL org.opencontainers.image.description="https://github.com/intro-skipper/segment-editor"
 
+RUN npm config set legacy-peer-deps=true
 RUN mkdir -p /app
 RUN npm cache clear --force
 WORKDIR /app
