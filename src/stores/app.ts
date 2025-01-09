@@ -12,6 +12,7 @@ export const useAppStore = defineStore('app', () => {
   const themeIndex = ref(1)
   const showVideoPlayer = ref(true)
   const enableEdl = ref(true)
+  const enableChapter = ref(true)
 
   const setTheme = () => {
     if (!themeIndex.value) {

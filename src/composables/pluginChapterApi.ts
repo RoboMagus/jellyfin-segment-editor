@@ -12,7 +12,7 @@ export function usePluginChapterApi() {
   }
 
   async function createChapterById(id: string[]) {
-    const response = await postJson('PluginChapter/Edl', id)
+    const response = await postJson('PluginChapter/Chapter', id)
     return response
   }
 

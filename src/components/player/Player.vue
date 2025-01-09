@@ -110,6 +110,9 @@
   </div>
   <div class="row">
     <div class="q-ml-auto">
+      <q-btn v-if="showChapterBtn()" class="q-mx-sm" @click="writeChapter" round outline dense>
+        chap
+      </q-btn>
       <q-btn v-if="showEdlBtn()" class="q-mx-sm" @click="writeEdl" round outline dense>
         edl
       </q-btn>
@@ -133,6 +136,7 @@ import { useMediaCapabilities } from 'src/composables/mediaCapabilities';
 import { useMediaControls, computedAsync, whenever, useMagicKeys, useThrottleFn, onKeyStroke } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { usePluginEdlApi } from 'src/composables/pluginEdlApi'
+import { usePluginChapterApi } from 'src/composables/pluginChapterApi'
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { useSessionStore } from 'src/stores/session';
@@ -141,6 +145,8 @@ import { usePluginStore } from 'src/stores/plugin';
 
 const { createEdlById } = usePluginEdlApi()
 const { showEdlBtn } = usePluginStore()
+const { createChapterById } = usePluginChapterApi()
+const { showChapterBtn } = usePluginStore()
 const { getItemImageUrl, getTimefromSeconds, numberToNumber } = useUtils()
 const { getVideoStream } = useVideoApi()
 const { testMediaStream, getMediaContainer, toJellyfinContainer } = useMediaCapabilities()
@@ -333,6 +339,11 @@ function onHlsEror(_event: typeof Hls.Events.ERROR, data: ErrorData): void {
       }
     }
   }
+}
+
+const writeChapter = () => {
+  createChapterById([props.item.Id])
+  notify({ message: t('plugin.chapter.created') })
 }
 
 const writeEdl = () => {

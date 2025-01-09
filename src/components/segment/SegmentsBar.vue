@@ -18,6 +18,9 @@
           @deleteSegment="deleteSegmentLocal" />
       </div>
       <div class="q-ml-auto">
+        <q-chip v-if="pluginStore.showChapterBtn()" clickable outline @click="writeChapter">
+          chap
+        </q-chip>
         <q-chip v-if="pluginStore.showEdlBtn()" clickable outline @click="writeEdl">
           edl
         </q-chip>
@@ -59,11 +62,13 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar'
 import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
+import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
 
 const { getColorByType, getReadableTimeFromSeconds, sortSegmentsStart, generateUUID } = useUtils()
 const { t } = useI18n()
 const $q = useQuasar()
 const { createEdlById } = usePluginEdlApi()
+const { createChapterById } = usePluginChapterApi()
 
 const pluginStore = usePluginStore()
 const segmentsStore = useSegmentsStore()
@@ -138,6 +143,11 @@ const copyFromSegmentClipboard = () => {
   } else {
     $q.notify({ message: t('editor.noSegmentInClipboard'), type: 'negative' })
   }
+}
+
+const writeChapter = () => {
+  createChapterById([props.item.Id])
+  $q.notify({ message: t('plugin.chapter.created') })
 }
 
 const writeEdl = () => {
