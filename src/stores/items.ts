@@ -73,8 +73,13 @@ export const useItemsStore = defineStore('items', () => {
 
   })
 
+  const isMixedType = (collection: ItemType, type: ItemType) : boolean => {
+    return collection == ItemType.Mixed && (type == ItemType.Movie
+      || type == ItemType.Series || type == ItemType.Season || type == ItemType.Episode)
+  }
+
   // apply items filter
-  const filteredItems = computed(() => localItems.value.filter((item) => (collectionToType.value == item.Type || collectionToType.value == ItemType.Mixed) && item.Name.toLowerCase().includes(filterName.value.toLowerCase())))
+  const filteredItems = computed(() => localItems.value.filter((item) => (collectionToType.value == item.Type || isMixedType(collectionToType.value, item.Type)) && item.Name.toLowerCase().includes(filterName.value.toLowerCase())))
 
   // Get and reset items whenever connection is io or collection changed
   watch([selectedCol, validConnection, validAuth], ([selcol, connection, auth]) => {
