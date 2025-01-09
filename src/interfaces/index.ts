@@ -22,6 +22,7 @@ export enum ItemType {
   Episode = 'Episode',
   MusicArtist = 'MusicArtist',
   MusicAlbum = 'MusicAlbum',
+  Mixed = 'Mixed',
 }
 
 export interface UserData {
@@ -136,7 +137,7 @@ export interface VirtualFolderDto {
   Locations: [
     string
   ],
-  CollectionType: string, // movies, tvshows
+  CollectionType: string, // movies, tvshows, mixed
   LibraryOptions: {
     EnablePhotos: boolean,
     EnableRealtimeMonitor: boolean,
