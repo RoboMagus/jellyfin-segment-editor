@@ -1,8 +1,5 @@
 name: Debug
 on:
-  push:
-    tags:
-      - '*'
   workflow_dispatch:
 
 jobs:
