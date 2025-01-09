@@ -1,3 +1,21 @@
+## [0.4.6](https://github.com/intro-skipper/segment-editor/compare/0.4.5..0.4.6) - 2025-01-09
+
+### ⛰️  Features
+
+- Frontend for Chapter Creator - ([3ee30a1](https://github.com/intro-skipper/segment-editor/commit/3ee30a1608a867fa0220b4f5136f4498b24ead67))
+- Backend for Chapter Creator - ([84539cd](https://github.com/intro-skipper/segment-editor/commit/84539cdc08eba7a14447ecdf83e9cf19cf7db28c))
+
+### 🐛 Bug Fixes
+
+- Docker: Allow legacy dependencies - ([dcb2f13](https://github.com/intro-skipper/segment-editor/commit/dcb2f131060a0b1b0e0c5fb99029e7e8a241688c))
+- Update capitalization - ([afd7e57](https://github.com/intro-skipper/segment-editor/commit/afd7e57aa2bde935a0f4060c2c6caebf8d8c93e0))
+- Disable filtering missing episode - ([222b9fc](https://github.com/intro-skipper/segment-editor/commit/222b9fcc5970895badf5f4d87b4f57a09bd8bfdf))
+
+### ⚙️ Miscellaneous Tasks
+
+- No debug on release - ([c7010e9](https://github.com/intro-skipper/segment-editor/commit/c7010e92bbc2683aca9c66c076a5b94e55e4828c))
+- This is above my pay grade - ([dc30525](https://github.com/intro-skipper/segment-editor/commit/dc3052551d00eb261ec30970f7a5a2ef39d9e371))
+- Mobile debug workflow - ([0e9e50f](https://github.com/intro-skipper/segment-editor/commit/0e9e50fc2ef5ce0a8bcb4b4df07ed56a15d1f9b1))
 
 ## [0.4.5](https://github.com/intro-skipper/segment-editor/compare/0.4.4..0.4.5) - 2024-12-04
 
