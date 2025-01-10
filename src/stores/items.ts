@@ -17,7 +17,7 @@ export const useItemsStore = defineStore('items', () => {
   const StartIndex = ref(0)
   const filterName = ref('')
 
-  const getCollectionss = async () => {
+  const getItemCollections = async () => {
     const coll = await getCollections()
     collections.value = coll;
 
@@ -87,11 +87,11 @@ export const useItemsStore = defineStore('items', () => {
     if (connection && auth) {
       // on intial startup collections are empty. This is already in App.vue
       if (selcol == '')
-        getCollectionss();
+        getItemCollections();
 
       getNewItems()
     }
   })
 
-  return { localItems, collections, selectedCol, filteredItems, filterName, getCollectionss, getMoreItems, pushMoreItems }
+  return { localItems, collections, selectedCol, filteredItems, filterName, getCollectionss: getItemCollections, getMoreItems, pushMoreItems }
 })
