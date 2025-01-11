@@ -110,10 +110,10 @@
   </div>
   <div class="row">
     <div class="q-ml-auto">
-      <q-btn v-if="showChapterBtn()" class="q-mx-sm" @click="writeChapter" round outline dense>
+      <q-btn v-if="pluginStore.showChapterBtn()" class="q-mx-sm" @click="writeChapter" round outline dense>
         chap
       </q-btn>
-      <q-btn v-if="showEdlBtn()" class="q-mx-sm" @click="writeEdl" round outline dense>
+      <q-btn v-if="pluginStore.showEdlBtn()" class="q-mx-sm" @click="writeEdl" round outline dense>
         edl
       </q-btn>
       <q-btn class="q-mx-sm" @click="copyFromSegmentClipboard" round outline dense>
@@ -142,11 +142,9 @@ import { useI18n } from 'vue-i18n';
 import { useSessionStore } from 'src/stores/session';
 import { usePluginStore } from 'src/stores/plugin';
 
-
 const { createEdlById } = usePluginEdlApi()
-const { showEdlBtn } = usePluginStore()
 const { createChapterById } = usePluginChapterApi()
-const { showChapterBtn } = usePluginStore()
+const pluginStore = usePluginStore()
 const { getItemImageUrl, getTimefromSeconds, numberToNumber } = useUtils()
 const { getVideoStream } = useVideoApi()
 const { testMediaStream, getMediaContainer, toJellyfinContainer } = useMediaCapabilities()
