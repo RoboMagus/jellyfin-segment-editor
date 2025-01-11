@@ -31,9 +31,8 @@ export function useApi() {
   async function getItems(collectionId: string, index?: number) {
     const query: Map<string, any> = new Map();
     query.set('parentId', collectionId);
-    query.set('fields', 'MediaStreams')
-    query.set('sortBy', 'AiredEpisodeOrder,SortName')
-    query.set('isMissing', false) // Not filtered by missing items
+    query.set('fields', 'MediaStreams');
+    query.set('sortBy', 'AiredEpisodeOrder,SortName');
     if (index != undefined) {
       // TODO all broken?!?!
       //query.set('startIndex', index)
