@@ -93,5 +93,5 @@ export const useItemsStore = defineStore('items', () => {
     }
   })
 
-  return { localItems, collections, selectedCol, filteredItems, filterName, getCollectionss: getItemCollections, getMoreItems, pushMoreItems }
+  return { localItems, collections, selectedCol, filteredItems, filterName, getItemCollections, getMoreItems, pushMoreItems }
 })
