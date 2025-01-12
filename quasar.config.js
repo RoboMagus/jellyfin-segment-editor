@@ -83,7 +83,6 @@ module.exports = configure(function (/* ctx */) {
         ['@intlify/vite-plugin-vue-i18n', {
           runtimeOnly: false,
         }],
-        ['@yaml-js/vite',{}],
         ['unplugin-vue-components/vite',{
             resolvers: [
               IconsResolver(),

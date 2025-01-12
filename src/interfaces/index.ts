@@ -22,7 +22,7 @@ export enum ItemType {
   Episode = 'Episode',
   MusicArtist = 'MusicArtist',
   MusicAlbum = 'MusicAlbum',
-  Mixed = 'Mixed', // placeholder
+  CollectionFolder = 'CollectionFolder',
 }
 
 export interface UserData {
