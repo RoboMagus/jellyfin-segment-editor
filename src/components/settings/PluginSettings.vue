@@ -22,6 +22,14 @@
       </a>
     </div>
     <div class="q-ma-sm">
+      <a href="https://github.com/intro-skipper/intro-skipper?tab=readme-ov-file#intro-skipper"
+         target="_blank">
+        <q-badge :color="pluginStore.pluginIntroSkipperInstalled ? 'green' : 'red'" rounded class="q-mr-sm" />Intro Skipper
+        {{
+          pluginStore.pluginIntroSkipperInstalled ? `(${pluginStore.pluginIntroSkipperVersion})` : '' }}
+      </a>
+    </div>
+    <div class="q-ma-sm">
       <a href="https://github.com/intro-skipper/jellyfin-plugin-edl?tab=readme-ov-file#jellyfin-plugin-edl" target="_blank">
         <q-badge :color="pluginStore.pluginEdlInstalled ? 'green' : 'orange'" rounded class="q-mr-sm" />Edl
         {{

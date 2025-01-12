@@ -28,7 +28,7 @@ export function useSegmentApi() {
    */
   async function createSegment(segment: MediaSegment) {
     const query: Map<string, string> = new Map();
-    query.set('providerId', 'SegmentEditor')
+    query.set('providerId', 'Intro Skipper')
 
     segment.StartTicks = secondsToTicks(segment.StartTicks)
     segment.EndTicks = secondsToTicks(segment.EndTicks)

@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useApiStore } from './api';
 import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
 import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
+import { usePluginIntroSkipper } from 'src/composables/pluginIntroSkipper';
 import { usePluginMediaSegmentsApi } from 'src/composables/pluginMediaSegmentsApi';
 import { useAppStore } from './app';
 
@@ -12,6 +13,7 @@ export const usePluginStore = defineStore('plugin', () => {
   const appStore = useAppStore()
   const { getChapterPluginMeta } = usePluginChapterApi()
   const { getEdlPluginMeta } = usePluginEdlApi()
+  const { getIntroSkipperPluginMeta } = usePluginIntroSkipper()
   const { getMediaSegmentsApiPluginMeta } = usePluginMediaSegmentsApi()
   const { validAuth } = storeToRefs(apiStore)
   const { enableEdl } = storeToRefs(appStore)
@@ -20,6 +22,9 @@ export const usePluginStore = defineStore('plugin', () => {
 
   const pluginSegmentsApiInstalled = ref(false)
   const pluginSegmentsApiVersion = ref('0.0.0')
+
+  const pluginIntroSkipperInstalled = ref(false)
+  const pluginIntroSkipperVersion = ref('0.0.0')
 
   const pluginEdlInstalled = ref(false)
   const pluginEdlVersion = ref('0.0.0')
@@ -30,6 +35,7 @@ export const usePluginStore = defineStore('plugin', () => {
   // Test for installed server Plugins
   const testServerPlugins = async () => {
     testMediaSegmentsApi()
+    testIntroSkipper()
     testEdl()
     testChapter()
   }
@@ -50,6 +56,24 @@ export const usePluginStore = defineStore('plugin', () => {
     }
     pluginSegmentsApiInstalled.value = false
     pluginSegmentsApiVersion.value = '0.0.0'
+  }
+
+  const testIntroSkipper = async () => {
+    let response;
+    try {
+      response = await getIntroSkipperPluginMeta();
+
+    } catch (error) {
+      console.error('testPluginIntroSkipper Error', error)
+      return false
+    }
+    if (response && response.version) {
+      pluginIntroSkipperInstalled.value = true
+      pluginIntroSkipperVersion.value = response.version
+      return
+    }
+    pluginIntroSkipperInstalled.value = false
+    pluginIntroSkipperVersion.value = '0.0.0'
   }
 
   const testEdl = async () => {
@@ -108,7 +132,7 @@ export const usePluginStore = defineStore('plugin', () => {
 
 
 
-  return { pluginSegmentsApiInstalled, pluginSegmentsApiVersion, pluginEdlInstalled, pluginEdlVersion, showEdlBtn, pluginChapterInstalled, pluginChapterVersion, showChapterBtn, testServerPlugins }
+  return { pluginSegmentsApiInstalled, pluginSegmentsApiVersion, pluginIntroSkipperInstalled, pluginIntroSkipperVersion, pluginEdlInstalled, pluginEdlVersion, showEdlBtn, pluginChapterInstalled, pluginChapterVersion, showChapterBtn, testServerPlugins }
 }, {
   persist: {
     storage: sessionStorage,
