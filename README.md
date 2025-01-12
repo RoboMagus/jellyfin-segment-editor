@@ -8,17 +8,18 @@ Manage Jellyfin Media Segment positions the simple way. This tool is in early st
 ## Requirements
 
 - Jellyfin 10.10
-- Jellyfin Plugin [MediaSegments API](https://github.com/endrl/jellyfin-plugin-ms-api)
+- Jellyfin Plugin [MediaSegments API](https://github.com/intro-skipper/jellyfin-plugin-ms-api)
 - Jellyfin Server API Key (created by you)
 
 ## Installation
 
-- Download for your platform from [Releases](https://github.com/endrl/segment-editor/releases/latest)
+- Download for your platform from [Releases](https://github.com/intro-skipper/segment-editor/releases/latest)
 
 ## Related projects
 
-- Jellyfin Plugin: [.EDL Creator](https://github.com/endrl/jellyfin-plugin-edl)
-- Jellyfin Plugin: [MediaSegments API](https://github.com/endrl/jellyfin-plugin-ms-api)
+- Jellyfin Plugin: [.EDL Creator](https://github.com/intro-skipper/jellyfin-plugin-edl)
+- Jellyfin Plugin: [Chapter Creator](https://github.com/intro-skipper/jellyfin-plugin-ms-chapter)
+- Jellyfin Plugin: [MediaSegments API](https://github.com/intro-skipper/jellyfin-plugin-ms-api)
 
 ## Work in progress
 
