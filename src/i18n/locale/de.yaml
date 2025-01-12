@@ -52,6 +52,9 @@ validation:
   StartEnd: Start liegt immer vor dem Ende
 close: Schließen
 back: Zurück
+provider:
+  chapter: Chapter Segments
+  skipper: Intro Skipper
 plugin:
   edl:
     enable: EDL Unterstützung

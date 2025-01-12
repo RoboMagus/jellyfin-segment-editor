@@ -14,6 +14,16 @@ export const useAppStore = defineStore('app', () => {
   const enableEdl = ref(true)
   const enableChapter = ref(true)
 
+  const jellyfinProvider = ref(false)
+
+  const providerId = () => {
+    if (jellyfinProvider) {
+      return 'Chapter Segments Provider'
+    } else {
+      return 'Intro Skipper'
+    }
+  }
+
   const setTheme = () => {
     if (!themeIndex.value) {
       $q.dark.set('auto')
@@ -32,5 +42,5 @@ export const useAppStore = defineStore('app', () => {
   // watch user lang changes
   watch(selectedLocale, setLocale)
 
-  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, enableChapter, setTheme, setLocale, SUPPORTED_LOCALES }
+  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, enableChapter, jellyfinProvider, providerId, setTheme, setLocale, SUPPORTED_LOCALES }
 })

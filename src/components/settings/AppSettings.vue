@@ -16,6 +16,8 @@
     <q-btn color="red" :label="$t('app.service.deleteAppdata')" @click="clear" />
   </div>
   -->
+  <div class="q-mt-sm">{{ t('provider.title') }}</div>
+  <q-toggle :label="t('provider.chapter')" v-model="appStore.jellyfinProvider" />
 </template>
 
 <script lang="ts" setup>

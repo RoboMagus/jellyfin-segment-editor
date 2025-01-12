@@ -51,6 +51,10 @@ validation:
   StartEnd: Start is always before End
 close: Close
 back: Back
+provider:
+  title: Alternate Provider ID
+  skipper: Intro Skipper
+  chapter: Chapter Segments
 plugin:
   edl:
     enable: EDL Support

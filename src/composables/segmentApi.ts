@@ -1,9 +1,11 @@
 import { useApiStore } from 'stores/api'
+import { useAppStore } from 'stores/app'
 import { ItemDto, MediaSegment } from 'src/interfaces';
 import { useUtils } from './utils';
 
 export function useSegmentApi() {
   const { fetchWithAuthJson, postJson, deleteJson } = useApiStore()
+  const { providerId } = useAppStore()
   const { secondsToTicks, ticksToMs } = useUtils()
 
   // Get segments. Convert ticks to seconds
@@ -28,7 +30,7 @@ export function useSegmentApi() {
    */
   async function createSegment(segment: MediaSegment) {
     const query: Map<string, string> = new Map();
-    query.set('providerId', 'Intro Skipper')
+    query.set('providerId', providerId() )
 
     segment.StartTicks = secondsToTicks(segment.StartTicks)
     segment.EndTicks = secondsToTicks(segment.EndTicks)
