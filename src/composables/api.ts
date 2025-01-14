@@ -1,13 +1,14 @@
 import { useApiStore } from 'stores/api'
 
-import { VirtualFolderInfo, ImageType, ItemsApiGetItemsRequest } from '@jellyfin/sdk/lib/generated-client';
+import { ImageType, ItemsApiGetItemsRequest } from '@jellyfin/sdk/lib/generated-client';
 import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
+import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api'
 import { Jellyfin } from '@jellyfin/sdk'
 import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
 
 
 export function useApi() {
-  const { fetchWithAuthJson, fetchWithAuth, serverAddress, apiKey } = useApiStore()
+  const { fetchWithAuth, serverAddress, apiKey } = useApiStore()
   const jellyfin = new Jellyfin({
     clientInfo: {
       name: 'Jellyfin Segment Editor',
@@ -22,6 +23,7 @@ export function useApi() {
 
   // Get the typed API client
   const itemsApi = getItemsApi(api)
+  const libraryStructureApi = getLibraryStructureApi(api)
   /*
     type RequestBody = {
       userId: number
@@ -80,8 +82,8 @@ export function useApi() {
 
   // Get all collections
   async function getCollections() {
-    const collections: VirtualFolderInfo[] = await fetchWithAuthJson('Library/VirtualFolders')
-    return collections
+    const libraries = await libraryStructureApi.getVirtualFolders()
+    return libraries.data
   }
 
   // Get Image for item
