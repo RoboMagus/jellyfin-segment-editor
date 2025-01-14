@@ -28,7 +28,7 @@ import { useApi } from 'src/composables/api';
 import { useItemsStore } from 'stores/items'
 
 const { pushMoreItems } = useItemsStore()
-const { getItems } = useApi();
+const { getEpisodes } = useApi();
 
 interface Props {
   item: BaseItemDto
@@ -37,8 +37,8 @@ interface Props {
 const props = defineProps<Props>()
 
 // fetch episodes of season
-const repisodes = await getItems(props.item.Id as string);
-const episodes: BaseItemDto[] = repisodes.Items;
+const repisodes = await getEpisodes(props.item.SeriesId as string, props.item.Id as string);
+const episodes: BaseItemDto[] = repisodes.Items ?? [];
 
 // push items
 pushMoreItems(episodes)

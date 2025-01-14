@@ -1,8 +1,9 @@
 import { useApiStore } from 'stores/api'
 
-import { ImageType, ItemsApiGetItemsRequest } from '@jellyfin/sdk/lib/generated-client';
+import { ImageType, ItemsApiGetItemsRequest, TvShowsApiGetEpisodesRequest } from '@jellyfin/sdk/lib/generated-client';
 import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
 import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api'
+import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api'
 import { Jellyfin } from '@jellyfin/sdk'
 import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
 
@@ -24,6 +25,7 @@ export function useApi() {
   // Get the typed API client
   const itemsApi = getItemsApi(api)
   const libraryStructureApi = getLibraryStructureApi(api)
+  const tvShowsApi = getTvShowsApi(api)
   /*
     type RequestBody = {
       userId: number
@@ -69,13 +71,12 @@ export function useApi() {
   */
 
   async function getItems(collectionId: string, index?: number) {
-    const params = {
+    const params: ItemsApiGetItemsRequest = {
       parentId: collectionId,
       fields: [ItemFields.MediaStreams],
       sortBy: [ItemSortBy.AiredEpisodeOrder, ItemSortBy.SortName],
       isMissing: false
-    } as ItemsApiGetItemsRequest
-
+    }
     const response = await itemsApi.getItems(params)
     return response.data
   }
@@ -84,6 +85,19 @@ export function useApi() {
   async function getCollections() {
     const libraries = await libraryStructureApi.getVirtualFolders()
     return libraries.data
+  }
+
+  // Get all episodes for a season
+  async function getEpisodes(seriesId: string, seasonId: string) {
+    const params: TvShowsApiGetEpisodesRequest = {
+      seasonId: seasonId,
+      seriesId: seriesId,
+      fields: [ItemFields.MediaStreams],
+      sortBy: ItemSortBy.AiredEpisodeOrder,
+      isMissing: false
+    }
+    const episodes = await tvShowsApi.getEpisodes(params)
+    return episodes.data
   }
 
   // Get Image for item
@@ -98,5 +112,5 @@ export function useApi() {
     return image
   }
 
-  return { getItems, getImage, getCollections }
+  return { getItems, getEpisodes, getImage, getCollections }
 }
