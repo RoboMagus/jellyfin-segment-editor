@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { useUtils } from 'src/composables/utils';
-import { ItemDto, MediaSegment, MediaSegmentType } from 'src/interfaces';
+import { BaseItemDto, MediaSegmentDto, MediaSegmentType } from '@jellyfin/sdk/lib/generated-client';
 import { useSegmentsStore } from 'stores/segments';
 import { useItemsStore } from 'stores/items';
 
@@ -62,7 +62,7 @@ const playerTimestamp = ref<number | undefined>(undefined);
 const activeIdx = ref(0)
 const newSegmentTimestamp = ref<object | undefined>({})
 // get current item from params
-const item = localItems.value.find((i: ItemDto) => i.Id == route.params.itemId)
+const item = localItems.value.find((i: BaseItemDto) => i.Id === route.params.itemId) as BaseItemDto
 if (item === undefined) {
   router.push('/')
 }
@@ -70,13 +70,13 @@ if (item === undefined) {
 if (route.query.fetchSegments)
   await segmentsStore.getNewSegmentsById(item.Id)
 
-const segs = localSegments.value.filter((seg: MediaSegment) => seg.ItemId == item.Id).sort(sortSegmentsStart)
+const segs = localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId == item.Id).sort(sortSegmentsStart)
 let editingSegments = reactive(JSON.parse(JSON.stringify(segs)));
 
 const runtimeSeconds = ticksToMs(item.RunTimeTicks) / 1000;
 
 const updateItem = (obj: any) => {
-  const found = editingSegments.find((seg: MediaSegment) => seg.Id == obj.id)
+  const found = editingSegments.find((seg: MediaSegmentDto) => seg.Id == obj.id)
   if (found) {
     found.StartTicks = obj.start
     found.EndTicks = obj.end
@@ -90,7 +90,7 @@ const updatePlayerTimestamp = (newtimestamp: number) => {
 }
 
 const createSegmentFromPlayer = (obj: { type: MediaSegmentType; start: number; end: number }) => {
-  const seg: MediaSegment = {
+  const seg: MediaSegmentDto = {
     Type: obj.type, StartTicks: obj.start, EndTicks: obj.end ? obj.end : obj.start + 1, ItemId: item.Id, Id: generateUUID()
   }
 

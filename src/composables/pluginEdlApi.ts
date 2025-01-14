@@ -1,10 +1,10 @@
-import { ItemDto } from 'src/interfaces'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client'
 import { useApiStore } from 'stores/api'
 
 export function usePluginEdlApi() {
   const { fetchWithAuthJson, postJson } = useApiStore()
 
-  async function getEdlById(id: ItemDto) {
+  async function getEdlById(id: BaseItemDto) {
 
     // const response = await fetchWithAuthJson(`PluginEdl/Edl/${id}`)
     const response = await fetchWithAuthJson(`PluginEdl/Edl/${id}`)

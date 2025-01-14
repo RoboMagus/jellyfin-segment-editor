@@ -8,14 +8,55 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
+import { configure } from 'quasar/wrappers'
+import path from 'path'
+import IconsResolver from 'unplugin-icons/resolver'
+import { QuasarResolver } from 'unplugin-vue-components/resolvers'
+import { load } from 'js-yaml'
 
-const { configure } = require('quasar/wrappers');
-const path = require('path');
+// Import Vite plugins
+import vueI18n from '@intlify/unplugin-vue-i18n/vite'
+import vueComponents from 'unplugin-vue-components/vite'
+import unpluginIcons from 'unplugin-icons/vite'
 
-const IconsResolver = require('unplugin-icons/resolver')
-const { QuasarResolver } = require('unplugin-vue-components/resolvers')
+export default configure(function (/* ctx */) {
+  // Define the custom YAML plugin
+  const yamlPlugin = {
+    name: 'yaml',
+    transform(src, id) {
+      if (id.endsWith('.yaml') || id.endsWith('.yml')) {
+        try {
+          const json = load(src)
+          if (typeof json !== 'object') {
+            return null
+          }
+          return {
+            code: `export default ${JSON.stringify(json)};`,
+            map: null
+          }
+        } catch (e) {
+          this.error(`Failed to parse YAML file: ${id}\n${e}`)
+        }
+      }
+      return null
+    }
+  }
 
-module.exports = configure(function (/* ctx */) {
+  // Initialize other plugins
+  const i18nPlugin = vueI18n({
+    runtimeOnly: false,
+  })
+
+  const componentsPlugin = vueComponents({
+    resolvers: [
+      IconsResolver(),
+      QuasarResolver(),
+    ],
+    dts: path.join(__dirname, './src/globals/components.d.ts')
+  })
+
+  const iconsPlugin = unpluginIcons()
+
   return {
     eslint: {
       // fix: true,
@@ -26,115 +67,67 @@ module.exports = configure(function (/* ctx */) {
       errors: false
     },
 
-    // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
-    // preFetch: true,
-
-    // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
-    // https://v2.quasar.dev/quasar-cli-vite/boot-files
+    // App boot files
     boot: [
       'i18n',
       'notify-defaults'
     ],
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
       'app.scss'
     ],
 
-    // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       'roboto-font',
       'material-icons',
     ],
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2022', 'edge94', 'firefox93', 'chrome94', 'safari16.4' ],
+        browser: ['es2022', 'edge94', 'firefox93', 'chrome94', 'safari16.4'],
         node: 'node18'
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-      // vueRouterBase,
-      // vueDevtools,
-      // vueOptionsAPI: false,
 
-      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-
-      // publicPath: '/',
-      // analyze: true,
-      // env: {},
       rawDefine: {
-        APP_COMMIT:  JSON.stringify(process.env.COMMIT_HASH || '')
+        APP_COMMIT: JSON.stringify(process.env.COMMIT_HASH || '')
       },
-      // ignorePublicFolder: true,
-      // minify: false,
-      // polyfillModulePreload: true,
-      // distDir
 
-      // extendViteConf (viteConf) { },
-      // viteVuePluginOptions: {},
-      alias : {
+      alias: {
         '@': path.join(__dirname, 'src'),
         composables: path.join(__dirname, 'src/composables'),
       },
-      vitePlugins: [
-        ['@intlify/vite-plugin-vue-i18n', {
-          runtimeOnly: false,
-        }],
-        ['unplugin-vue-components/vite',{
-            resolvers: [
-              IconsResolver(),
-              QuasarResolver(),
-            ],
-            dts: path.join(__dirname, './src/globals/components.d.ts')
-        }],
-        ['unplugin-icons/vite',{}],
-      ]
-    },
 
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
-    devServer: {
-      // https: true
-      port: 3111,
-      open: false // opens browser window automatically
-    },
-
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
-    framework: {
-      config: {
-        dark:true
+      extendViteConf(viteConf) {
+        viteConf.plugins = viteConf.plugins || []
+        // Add the custom YAML plugin
+        viteConf.plugins.push(yamlPlugin)
+        // Add other Vite plugins
+        viteConf.plugins.push(i18nPlugin)
+        viteConf.plugins.push(componentsPlugin)
+        viteConf.plugins.push(iconsPlugin)
       },
 
-      // iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-US', // Quasar language pack
-
-      // For special cases outside of where the auto-import strategy can have an impact
-      // (like functional components as one of the examples),
-      // you can manually specify Quasar components/directives to be available everywhere:
-      //
-      // components: [],
-      // directives: [],
-
-      // Quasar plugins
-      plugins: ['Dialog','Notify']
+      // Remove vitePlugins since we're adding them via extendViteConf
+      vitePlugins: []
     },
 
-    // animations: 'all', // --- includes all animations
-    // https://v2.quasar.dev/options/animations
-    animations: [],
+    devServer: {
+      port: 3111,
+      open: false // disables automatic browser opening
+    },
 
-    // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
-    // sourceFiles: {
-    //   rootComponent: 'src/App.vue',
-    //   router: 'src/router/index',
-    //   store: 'stores/index',
-    //   registerServiceWorker: 'src-pwa/register-service-worker',
-    //   serviceWorker: 'src-pwa/custom-service-worker',
-    //   pwaManifestFile: 'src-pwa/manifest.json',
-    //   electronMain: 'src-electron/electron-main',
-    //   electronPreload: 'src-electron/electron-preload'
-    // },
+    framework: {
+      config: {
+        dark: true
+      },
+
+      lang: 'en-US',
+
+      plugins: ['Dialog', 'Notify']
+    },
+
+    animations: []
   }
-});
+})

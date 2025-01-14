@@ -1,11 +1,10 @@
 /* eslint-disable */
 
-// Declare yaml files
+// Declare YAML files
 declare module '*.yaml' {
   const value: any;
   export default value;
 }
-
 
 declare namespace NodeJS {
   interface ProcessEnv {

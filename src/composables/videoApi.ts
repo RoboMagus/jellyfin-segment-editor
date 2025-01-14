@@ -1,5 +1,5 @@
 import { useApiStore } from 'stores/api'
-import { ItemDto } from 'src/interfaces';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 
 export function useVideoApi() {
   const { buildUrl, postJson } = useApiStore()
@@ -13,7 +13,7 @@ export function useVideoApi() {
  * @param forceAudioReason force transcode of audio
  * @param container ts, mp4, ...
  */
-  function getVideoStream(itemId: ItemDto['Id'], forceVideoReason?: string, forceAudioReason?: string, container?: string) {
+  function getVideoStream(itemId: BaseItemDto['Id'], forceVideoReason?: string, forceAudioReason?: string, container?: string) {
     const query: Map<string, any> = new Map();
     const transcodeReasons: string[] = [];
     query.set('MediaSourceId', itemId)
@@ -48,7 +48,7 @@ export function useVideoApi() {
    * Report end of playback. Requires userId from httpContext server side...
    * @param itemId
    */
-  function reportPlayingStop(itemId: ItemDto['Id']) {
+  function reportPlayingStop(itemId: BaseItemDto['Id']) {
     const payload = {
       ItemId: itemId,
       MediaSourceId: itemId,

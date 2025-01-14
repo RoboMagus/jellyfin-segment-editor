@@ -1,4 +1,4 @@
-import { ImageType, ItemDto, MediaSegment } from 'src/interfaces';
+import { ImageType, BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api'
 
 export function useUtils() {
@@ -9,9 +9,9 @@ export function useUtils() {
    * @param item item
    * @param imgType image type
    */
-  async function getItemImageUrl(item: ItemDto, width: number, height: number, imgType: ImageType) {
+  async function getItemImageUrl(item: BaseItemDto, width: number, height: number, imgType: ImageType) {
     let imgTag;
-    let itemId: string = item.Id;
+    let itemId: string = item.Id as string;
 
     const preferBackdrop = imgType == ImageType.Backdrop
 
@@ -92,7 +92,7 @@ export function useUtils() {
     return URL.createObjectURL(blob)
   }
 
-  function getColorByType(type: MediaSegment['Type']) {
+  function getColorByType(type: MediaSegmentDto['Type']) {
     switch (type) {
       case 'Intro':
         return 'green-5'
@@ -164,11 +164,11 @@ export function useUtils() {
    * @param sB segment b
    * @returns
    */
-  function sortSegmentsStart(sA: MediaSegment, sB: MediaSegment) {
-    if (sA.StartTicks < sB.StartTicks) {
+  function sortSegmentsStart(sA: MediaSegmentDto, sB: MediaSegmentDto) {
+    if (sA.StartTicks && sB.StartTicks && sA.StartTicks < sB.StartTicks) {
       return -1;
     }
-    if (sA.StartTicks > sB.StartTicks) {
+    if (sA.StartTicks && sB.StartTicks && sA.StartTicks > sB.StartTicks) {
       return 1;
     }
     // or equal

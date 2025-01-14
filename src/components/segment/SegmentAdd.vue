@@ -17,15 +17,15 @@
           </div>
           <div class="text-subtitle2 col-12">
             <div>
-              {{ $t('segment.start') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.StartTicks)) }}
+              {{ $t('segment.start') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.StartTicks ?? 0)) }}
             </div>
             <div>
-              {{ $t('segment.end') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks))
+              {{ $t('segment.end') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks ?? 0))
               }}
             </div>
             <div>
-              {{ $t('segment.duration') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks -
-    localSegment.StartTicks))
+              {{ $t('segment.duration') }}: {{ getReadableTimeFromSeconds(Math.round((localSegment.EndTicks ?? 0) -
+              ( localSegment.StartTicks ?? 0)))
               }}
             </div>
           </div>
@@ -59,8 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { ItemDto, MediaSegment, MediaSegmentType } from 'src/interfaces';
-import { reactive, ref } from 'vue';
+import { BaseItemDto, MediaSegmentDto, MediaSegmentType } from '@jellyfin/sdk/lib/generated-client';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUtils } from 'src/composables/utils'
 
@@ -68,25 +68,30 @@ const { getReadableTimeFromSeconds, generateUUID } = useUtils()
 const { t } = useI18n()
 
 interface Props {
-  itemId: ItemDto['Id'],
+  itemId: BaseItemDto['Id'],
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits(['saveSegment'])
 
 const showDialog = ref(false)
-let localSegment = reactive(new MediaSegment())
+//let localSegment = reactive(new MediaSegment())
+let localSegment: MediaSegmentDto = {
+  Id: generateUUID(),
+  StartTicks: 0,
+  EndTicks: 1,
+  Type: MediaSegmentType.Intro,
+  ItemId: props.itemId as string
+}
 
-localSegment.Id = generateUUID()
-
-const rule = () => (localSegment.StartTicks >= localSegment.EndTicks) ? t('validation.StartEnd') : true;
+const rule = () => (localSegment.StartTicks && localSegment.EndTicks && localSegment.StartTicks >= localSegment.EndTicks) ? t('validation.StartEnd') : true;
 
 const saveSegment = async () => {
   if (rule() !== true) return
 
   showDialog.value = false
   // inject itemId
-  localSegment.ItemId = props.itemId
+  localSegment.ItemId = props.itemId as string
   emit('saveSegment', JSON.parse(JSON.stringify(localSegment)));
 }
 </script>

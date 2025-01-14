@@ -10,7 +10,7 @@
 
 <script lang="ts">
 interface Props {
-  item: ItemDto,
+  item: BaseItemDto,
   width: number,
   height: number,
   preferBackdrop?: boolean
@@ -21,7 +21,7 @@ interface Props {
 import { ref } from 'vue'
 import { useApi } from 'src/composables/api'
 import { useUtils } from 'src/composables/utils'
-import { ItemDto } from 'src/interfaces'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client'
 
 const { getImage } = useApi()
 const { getImageOfStream } = useUtils()
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const onIntersect = () => {
-  getImage(props.item.Id, props.width, props.height).then((response) => getImageOfStream(response)).then((url) => {
+  getImage(props.item.Id as string, props.width, props.height).then((response) => getImageOfStream(response)).then((url) => {
     if (image.value) {
       image.value.src = url
     }

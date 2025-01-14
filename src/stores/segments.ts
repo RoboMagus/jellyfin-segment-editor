@@ -1,19 +1,19 @@
 import { useSegmentApi } from 'src/composables/segmentApi'
-import { ItemDto, MediaSegment } from 'src/interfaces'
+import { BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useSegmentsStore = defineStore('segments', () => {
   const sapi = useSegmentApi()
-  const localSegments = ref<Array<MediaSegment>>([])
+  const localSegments = ref<Array<MediaSegmentDto>>([])
 
   /**
 *  Gather new segments by id from server, deletes local cached ones
 */
-  const getNewSegmentsById = async (itemId: ItemDto['Id']) => {
+  const getNewSegmentsById = async (itemId: BaseItemDto['Id']) => {
     const segments = await sapi.getSegmentsById(itemId)
     // simply filter and replace array
-    localSegments.value = localSegments.value.filter((seg: MediaSegment) => seg.ItemId != itemId)
+    localSegments.value = localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId != itemId)
     // push new segments
     localSegments.value.push(...segments.Items)
   }
@@ -22,7 +22,7 @@ export const useSegmentsStore = defineStore('segments', () => {
    * Save/update segments local and server
    * @param segment MediaSegment to save
    */
-  const saveSegment = async (segment: MediaSegment) => {
+  const saveSegment = async (segment: MediaSegmentDto) => {
     // update local and server
     localSegments.value.push(segment)
     // stringify and parse (seconds to ticks creates reactivity)
@@ -39,9 +39,9 @@ export const useSegmentsStore = defineStore('segments', () => {
    * Update segment
    * @param segment Modified segment
    */
-  const saveUpdatedSegment = (segment: MediaSegment) => {
+  const saveUpdatedSegment = (segment: MediaSegmentDto) => {
     // check if segment is already available, if so remove it
-    const found = localSegments.value.findIndex((seg: MediaSegment) => seg.Id)
+    const found = localSegments.value.findIndex((seg: MediaSegmentDto) => seg.Id)
     if (found > -1) {
       localSegments.value.splice(found, 1)
     }
@@ -52,7 +52,7 @@ export const useSegmentsStore = defineStore('segments', () => {
    * New segment to save
    * @param segment New segment
    */
-  const saveNewSegment = (segment: MediaSegment) => {
+  const saveNewSegment = (segment: MediaSegmentDto) => {
     saveSegment(segment)
   }
 
@@ -60,7 +60,7 @@ export const useSegmentsStore = defineStore('segments', () => {
   * New segments to save
   * @param segments New segments
   */
-  const saveNewSegments = (segments: MediaSegment[]) => {
+  const saveNewSegments = (segments: MediaSegmentDto[]) => {
     for (const seg of segments) {
       saveNewSegment(seg)
     }
@@ -70,9 +70,9 @@ export const useSegmentsStore = defineStore('segments', () => {
    * Delete segment
    * @param segment segment to delete
    */
-  const deleteSegment = (segment: MediaSegment) => {
+  const deleteSegment = (segment: MediaSegmentDto) => {
     // check if segment is available, if so remove it
-    const found = localSegments.value.findIndex((seg: MediaSegment) => seg.Id == segment.Id)
+    const found = localSegments.value.findIndex((seg: MediaSegmentDto) => seg.Id == segment.Id)
     if (found > -1) {
       localSegments.value.splice(found, 1)
     }
@@ -83,10 +83,10 @@ export const useSegmentsStore = defineStore('segments', () => {
  * Delete all segments with itemid
  * @param itemId itemid of segments
  */
-  const deleteSegments = (itemId: ItemDto['Id']) => {
-    const found = localSegments.value.filter((seg: MediaSegment) => seg.ItemId == itemId)
+  const deleteSegments = (itemId: BaseItemDto['Id']) => {
+    const found = localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId == itemId)
     // simply filter and replace array
-    localSegments.value = localSegments.value.filter((seg: MediaSegment) => seg.ItemId != itemId)
+    localSegments.value = localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId != itemId)
 
     found.forEach(el => {
       sapi.deleteSegment(el)
@@ -94,7 +94,6 @@ export const useSegmentsStore = defineStore('segments', () => {
 
 
   }
-
 
   return { saveUpdatedSegment, saveNewSegment, saveNewSegments, deleteSegment, deleteSegments, getNewSegmentsById, localSegments }
 })

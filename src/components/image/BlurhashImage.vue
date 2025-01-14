@@ -7,7 +7,7 @@ import { wrap } from 'comlink';
 import BlurhashWorker from 'src/composables/BlurhashWorker?worker&inline';
 
 interface Props {
-  item: ItemDto,
+  item: BaseItemDto,
   punch?: number,
   width?: number,
   height?: number
@@ -19,7 +19,7 @@ const pixelWorker = wrap<typeof import('src/composables/BlurhashWorker')['defaul
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { ItemDto } from 'src/interfaces';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 
 const props = withDefaults(defineProps<Props>(), {
   width: 32,
@@ -56,5 +56,5 @@ watch([props, canvas], async () => {
   }
 });
 
-const getBlurImageOfItem = (item: ItemDto) => { return Object.values(item.ImageBlurHashes.Primary)[0] }
+const getBlurImageOfItem = (item: BaseItemDto): string => item.ImageBlurHashes?.Primary ? Object.values(item.ImageBlurHashes.Primary)[0] : '';
 </script>

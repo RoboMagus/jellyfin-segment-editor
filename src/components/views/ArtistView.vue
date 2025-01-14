@@ -19,13 +19,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ItemDto } from 'src/interfaces';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api';
 import { useRoute, useRouter } from 'vue-router'
 import { useItemsStore } from 'stores/items'
-import { useSessionStore } from 'stores/session';
 
-const sessionStore = useSessionStore()
 const { pushMoreItems } = useItemsStore()
 const route = useRoute()
 const router = useRouter()
@@ -37,8 +35,8 @@ if (itemId === undefined) {
   router.replace('/')
 }
 
-const ralbums = await getItems(itemId);
-const albums: ItemDto[] = ralbums.Items;
+const ralbums = await getItems(itemId as string);
+const albums: BaseItemDto[] = ralbums.Items;
 // push items into local cache
 pushMoreItems(albums)
 </script>

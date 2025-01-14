@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ItemDto } from 'src/interfaces';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api';
 import { useRoute, useRouter } from 'vue-router'
 import { useItemsStore } from 'stores/items'
@@ -36,7 +36,7 @@ const { getItems } = useApi();
 const expansionRefs = ref([])
 
 // get current item from params
-const itemId = route.params.itemId
+const itemId = route.params.itemId as string
 if (itemId === undefined) {
   router.push('/')
 }
@@ -56,7 +56,7 @@ onMounted(() => {
 
 // fetch seasons
 const rseasons = await getItems(itemId);
-const seasons: ItemDto[] = rseasons.Items;
+const seasons: BaseItemDto[] = rseasons.Items;
 // push items into local cache
 pushMoreItems(seasons)
 </script>

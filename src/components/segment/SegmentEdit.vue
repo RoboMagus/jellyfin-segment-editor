@@ -14,15 +14,14 @@
             <div class="wrap">{{ item.Name }}: {{ localSegment.Type }}
             </div>
             <div>
-              {{ t('segment.start') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.StartTicks)) }}
+              {{ t('segment.start') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.StartTicks ?? 0)) }}
             </div>
             <div>
-              {{ t('segment.end') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks))
+              {{ t('segment.end') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks ?? 0))
               }}
             </div>
             <div>
-              {{ t('segment.duration') }}: {{ getReadableTimeFromSeconds(Math.round(localSegment.EndTicks -
-    localSegment.StartTicks))
+              {{ t('segment.duration') }}: {{ getReadableTimeFromSeconds(Math.round((localSegment.EndTicks ?? 0) - (localSegment.StartTicks ?? 0)))
               }}
             </div>
           </div>
@@ -52,7 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { ItemDto, MediaSegment } from 'src/interfaces';
+import { MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUtils } from 'src/composables/utils'
@@ -66,8 +66,8 @@ const $q = useQuasar()
 
 interface Props {
   modelValue: boolean,
-  segment: MediaSegment,
-  item: ItemDto,
+  segment: MediaSegmentDto,
+  item: BaseItemDto,
 }
 
 const props = defineProps<Props>()
@@ -90,7 +90,7 @@ const deleteSegment = () => {
   emit('deleteSegment', JSON.parse(JSON.stringify(localSegment)));
 }
 
-const rule = () => localSegment.StartTicks >= localSegment.EndTicks ? t('validation.StartEnd') : true;
+const rule = () => (localSegment.StartTicks ?? 0) >= (localSegment.EndTicks ?? 0) ? t('validation.StartEnd') : true;
 
 const openConfirmDialog = () => {
   $q.dialog({

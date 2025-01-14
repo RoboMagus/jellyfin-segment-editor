@@ -1,6 +1,6 @@
 import { useApiStore } from 'stores/api'
 import { useAppStore } from 'stores/app'
-import { ItemDto, MediaSegment } from 'src/interfaces';
+import { BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
 import { useUtils } from './utils';
 
 export function useSegmentApi() {
@@ -9,13 +9,13 @@ export function useSegmentApi() {
   const { secondsToTicks, ticksToMs } = useUtils()
 
   // Get segments. Convert ticks to seconds
-  async function getSegmentsById(itemId: ItemDto['Id']) {
+  async function getSegmentsById(itemId: BaseItemDto['Id']) {
     const query: Map<string, string> = new Map();
-    query.set('itemId', itemId)
+    query.set('itemId', itemId as string)
 
     const items = await fetchWithAuthJson(`MediaSegments/${itemId}`, query)
 
-    items.Items.forEach((seg: MediaSegment) => {
+    items.Items.forEach((seg: MediaSegmentDto) => {
       seg.StartTicks = ticksToMs(seg.StartTicks) / 1000
       seg.EndTicks = ticksToMs(seg.EndTicks) / 1000
     });
@@ -28,7 +28,7 @@ export function useSegmentApi() {
    * @param segment segment
    * @return The created segments
    */
-  async function createSegment(segment: MediaSegment) {
+  async function createSegment(segment: MediaSegmentDto) {
     const query: Map<string, string> = new Map();
     query.set('providerId', providerId() )
 
@@ -42,7 +42,7 @@ export function useSegmentApi() {
   * Delte a media segment on server
   * @param segment segment
   */
-  async function deleteSegment(segment: MediaSegment) {
+  async function deleteSegment(segment: MediaSegmentDto) {
     deleteJson(`MediaSegmentsApi/${segment.Id}`)
   }
 
@@ -50,7 +50,7 @@ export function useSegmentApi() {
   * Delete all media segments for providerId on server
   * @param segment segment
   */
-  async function deleteSegmentsByProviderId(itemId: ItemDto['Id']) {
+  async function deleteSegmentsByProviderId(itemId: BaseItemDto['Id']) {
     itemId
     console.error('deleteSegmentsByProviderId not possible')
   }

@@ -1,4 +1,4 @@
-import { BaseMediaStream } from 'src/interfaces';
+import { MediaStream } from '@jellyfin/sdk/lib/generated-client';
 
 export function useMediaCapabilities() {
 
@@ -200,10 +200,10 @@ export function useMediaCapabilities() {
    * FFmpeg Profile: https://trac.ffmpeg.org/wiki/Encode/H.264#Profile
    * @param stream
    */
-  const getCodecH264 = (stream: BaseMediaStream) => {
+  const getCodecH264 = (stream: MediaStream) => {
     // codec schema: avc1[.PPCCLL]
-    const PPCC = getAvcProfile(stream.Profile)
-    const LL = stream.Level.toString(16)
+    const PPCC = getAvcProfile(stream.Profile ?? '')
+    const LL = stream.Level?.toString(16)
     return `avc1.${PPCC}${LL}`
   }
 
@@ -214,17 +214,17 @@ export function useMediaCapabilities() {
    * Spec: https://aomediacodec.github.io/av1-spec/#annex-a-profiles-and-levels
    * @param stream
    */
-  const getCodecAV1 = (stream: BaseMediaStream) => {
+  const getCodecAV1 = (stream: MediaStream) => {
     // codec schema: cccc.P.LLT.DD[.M.CCC.cp.tc.mc.F]
     // const xlvl = 2 + (stream.Level >> 2)
     // const ylvl = (stream.Level & 3)
 
     const cccc = stream.CodecTag
-    const P = getAv1Profile(stream.Profile)
+    const P = getAv1Profile(stream.Profile ?? '')
     const LL = stream.Level < 10 ? `0${stream.Level}` : stream.Level;
     const T = 'M' // seq_tier derived from ?!, available from xlvl >= 4 which can be set to 'H' for high tier
     const DD = stream.BitDepth < 10 ? `0${stream.BitDepth}` : stream.BitDepth;
-    const CCC = getAv1Subsampling(stream.PixelFormat)
+    const CCC = getAv1Subsampling(stream.PixelFormat ?? '')
     const M = CCC ? (CCC == '111' ? 1 : 0) : undefined;
 
     let codec = `${cccc}.${P}.${LL}${T}.${DD}`
@@ -242,11 +242,11 @@ export function useMediaCapabilities() {
    * Spec: https://x265.readthedocs.io/en/master/cli.html#profile-level-tier
    * @param stream
    */
-  const getCodecHevc = (stream: BaseMediaStream) => {
+  const getCodecHevc = (stream: MediaStream) => {
     // codec schema UNKNOWN: ccc.P.LLT.DD[.M.CCC.cp.tc.mc.F]
     // fallback if CodecTag is not available
     const cccc = stream.CodecTag ?? 'hev1';
-    const X = getHevcProfile(stream.Profile)
+    const X = getHevcProfile(stream.Profile ?? '')
     const T = 'L' // Main Tier = L, High Tier = H (high requires profile >= 4.0) stream.Level >= 120 (decimal)
     const L = stream.Level
 
@@ -258,7 +258,7 @@ export function useMediaCapabilities() {
    * Spec: https://www.webmproject.org/vp9/mp4/
    * @param stream
    */
-  const getCodecWebM = (stream: BaseMediaStream) => {
+  const getCodecWebM = (stream: MediaStream) => {
     // codec schema cccc.PP.LL.DD[.CC.cp.tc.mc.FF]
     const cccc = stream.Codec === 'vp9' ? 'vp09' : 'vp08'
     // vp9 test file had "Profile 0" as profile string, ffmpeg probe test confirmed the bug

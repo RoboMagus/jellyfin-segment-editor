@@ -1,9 +1,29 @@
 import { useApiStore } from 'stores/api'
 
-import { ImageType, VirtualFolderDto } from 'src/interfaces';
+import { VirtualFolderInfo, ImageType, ItemsApiGetItemsRequest } from '@jellyfin/sdk/lib/generated-client';
+// import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
+// import { Jellyfin } from '@jellyfin/sdk'
+// import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
+
 
 export function useApi() {
   const { fetchWithAuthJson, fetchWithAuth } = useApiStore()
+  /*
+  const jellyfin = new Jellyfin({
+    clientInfo: {
+      name: 'Jellyfin Segment Editor',
+      version: '0.4.6'
+    },
+    deviceInfo: {
+      name: 'Web Browser',
+      id: 'segment-editor-browser'
+    }
+  })
+  const api = jellyfin.createApi(useApiStore().serverAddress)
+  */
+
+  // Get the typed API client
+  // const itemsApi = getItemsApi(api)
   /*
     type RequestBody = {
       userId: number
@@ -33,6 +53,7 @@ export function useApi() {
     query.set('parentId', collectionId);
     query.set('fields', 'MediaStreams');
     query.set('sortBy', 'AiredEpisodeOrder,SortName');
+    query.set('isMissing', 'false');
     if (index != undefined) {
       // TODO all broken?!?!
       //query.set('startIndex', index)
@@ -45,9 +66,25 @@ export function useApi() {
     return items;
   }
 
+  /*
+  async function getItems(collectionId: string, index?: number) {
+    const params = {
+      parentId: collectionId,
+      fields: [ItemFields.MediaStreams],
+      sortBy: [ItemSortBy.AiredEpisodeOrder, ItemSortBy.SortName],
+      isMissing: false
+    } as ItemsApiGetItemsRequest
+
+    const response = await itemsApi.getItems(params)
+    return response.data
+  }
+  */
+
+
+
   // Get all collections
   async function getCollections() {
-    const collections: VirtualFolderDto[] = await fetchWithAuthJson('Library/VirtualFolders')
+    const collections: VirtualFolderInfo[] = await fetchWithAuthJson('Library/VirtualFolders')
     return collections
   }
 

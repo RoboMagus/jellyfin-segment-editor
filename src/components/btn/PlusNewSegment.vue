@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { MediaSegmentType } from 'src/interfaces';
+import { MediaSegmentType } from '@jellyfin/sdk/lib/generated-client';
 
 
 defineEmits(['createSegment'])

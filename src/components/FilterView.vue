@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ItemType, ItemDto } from 'src/interfaces';
+import { BaseItemKind, BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useItemsStore } from 'stores/items';
 import { useRouter } from 'vue-router';
 
@@ -46,13 +46,13 @@ const loadData = (isVisible: boolean) => {
 }
 */
 
-const navigateTo = (item: ItemDto) => {
+const navigateTo = (item: BaseItemDto) => {
   let route = ''
-  if (item.Type == ItemType.Movie) {
+  if (item.Type == BaseItemKind.Movie) {
     route = `/player/${item.Id}?fetchSegments=true`
-  } else if (item.Type == ItemType.Series) {
+  } else if (item.Type == BaseItemKind.Series) {
     route = `/series/${item.Id}`
-  } else if (item.Type == ItemType.MusicArtist) {
+  } else if (item.Type == BaseItemKind.MusicArtist) {
     route = `/artist/${item.Id}`
   }
   router.push(route)
