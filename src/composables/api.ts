@@ -1,29 +1,27 @@
 import { useApiStore } from 'stores/api'
 
 import { VirtualFolderInfo, ImageType, ItemsApiGetItemsRequest } from '@jellyfin/sdk/lib/generated-client';
-// import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
-// import { Jellyfin } from '@jellyfin/sdk'
-// import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
+import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
+import { Jellyfin } from '@jellyfin/sdk'
+import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
 
 
 export function useApi() {
-  const { fetchWithAuthJson, fetchWithAuth } = useApiStore()
-  /*
+  const { fetchWithAuthJson, fetchWithAuth, serverAddress, apiKey } = useApiStore()
   const jellyfin = new Jellyfin({
     clientInfo: {
       name: 'Jellyfin Segment Editor',
-      version: '0.4.6'
+      version: '0.4.7'
     },
     deviceInfo: {
       name: 'Web Browser',
       id: 'segment-editor-browser'
     }
   })
-  const api = jellyfin.createApi(useApiStore().serverAddress)
-  */
+  const api = jellyfin.createApi(serverAddress, apiKey)
 
   // Get the typed API client
-  // const itemsApi = getItemsApi(api)
+  const itemsApi = getItemsApi(api)
   /*
     type RequestBody = {
       userId: number
@@ -48,6 +46,7 @@ export function useApi() {
   */
 
   // Get items for collection
+  /*
   async function getItems(collectionId: string, index?: number) {
     const query: Map<string, any> = new Map();
     query.set('parentId', collectionId);
@@ -65,8 +64,8 @@ export function useApi() {
     const items = await fetchWithAuthJson('Items', query)
     return items;
   }
+  */
 
-  /*
   async function getItems(collectionId: string, index?: number) {
     const params = {
       parentId: collectionId,
@@ -78,9 +77,6 @@ export function useApi() {
     const response = await itemsApi.getItems(params)
     return response.data
   }
-  */
-
-
 
   // Get all collections
   async function getCollections() {
