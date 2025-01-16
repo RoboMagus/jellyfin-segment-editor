@@ -117,7 +117,7 @@ jobs:
 
       - name: Publish Android
         if: matrix.android
-        uses: softprops/action-gh-release@v2.0.8
+        uses: softprops/action-gh-release@v2.2.1
         with:
           draft: true
           name: Jellyfin Segment Editor ${{ steps.package-version.outputs.current-version}}
