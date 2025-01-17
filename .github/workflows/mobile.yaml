@@ -7,7 +7,7 @@ jobs:
     permissions:
       contents: write
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - platform: 'ubuntu-latest'
@@ -115,7 +115,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Jellyfin Segment Editor ${{ matrix.arch }}
+          name: JSE-${{ matrix.arch }}
           path: src-tauri/gen/android/app/build/outputs/apk/universal/release/Jellyfin.Segment.Editor_*.apk
           retention-days: 1
 
