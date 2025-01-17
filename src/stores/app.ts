@@ -14,14 +14,22 @@ export const useAppStore = defineStore('app', () => {
   const enableEdl = ref(true)
   const enableChapter = ref(true)
 
-  const jellyfinProvider = ref(false)
+  const providerIndex = ref(1)
 
   const providerId = () => {
-    if (jellyfinProvider) {
-      return 'Chapter Segments Provider'
-    } else {
-      return 'Intro Skipper'
+    let providerName;
+    switch (providerIndex.value) {
+      case 0:
+        providerName = 'MediaSegments API'
+        break;
+      case 1:
+        providerName = 'Intro Skipper'
+        break;
+      case 2:
+        providerName = 'Chapter Segments Provider'
+        break;
     }
+    return providerName;
   }
 
   const setTheme = () => {
@@ -42,5 +50,5 @@ export const useAppStore = defineStore('app', () => {
   // watch user lang changes
   watch(selectedLocale, setLocale)
 
-  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, enableChapter, jellyfinProvider, providerId, setTheme, setLocale, SUPPORTED_LOCALES }
+  return { selectedLang: selectedLocale, themeIndex, showVideoPlayer, enableEdl, enableChapter, providerIndex, providerId, setTheme, setLocale, SUPPORTED_LOCALES }
 })

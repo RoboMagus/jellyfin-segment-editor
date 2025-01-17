@@ -17,7 +17,7 @@
   </div>
   -->
   <div class="q-mt-sm">{{ t('provider.title') }}</div>
-  <q-toggle :label="t('provider.chapter')" v-model="appStore.jellyfinProvider" />
+  <q-select v-model="appStore.providerIndex" :options="providers" />
 </template>
 
 <script lang="ts" setup>
@@ -30,6 +30,7 @@ const { t } = useI18n();
 
 const langList = computed(() => appStore.SUPPORTED_LOCALES.map(l => { return { 'label': t(`app.locale.${l}`), 'value': l } }));
 const themeList = computed(() => ['system', 'dark', 'light'].map((th, idx) => { return { label: t(`app.theme.${th}`), value: idx } }));
+const providers = computed(() => ['default', 'skipper', 'chapter'].map((pr, idx) => { return { label: t(`provider.${pr}`), value: idx } }));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clear = () => {

@@ -53,8 +53,9 @@ validation:
 close: Fermé
 back: Retour
 provider:
-  chapter: Chapter Segments
+  default: MediaSegments API
   skipper: Intro Skipper
+  chapter: Chapter Segments
 plugin:
   edl:
     enable: EDL Soutien

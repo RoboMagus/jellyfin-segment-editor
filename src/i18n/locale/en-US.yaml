@@ -52,7 +52,8 @@ validation:
 close: Close
 back: Back
 provider:
-  title: Alternate Provider ID
+  title: Provider ID (Name)
+  default: MediaSegments API
   skipper: Intro Skipper
   chapter: Chapter Segments
 plugin:
