@@ -115,7 +115,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Jellyfin Segment Editor ${{ steps.package-version.outputs.current-version}}
+          name: Jellyfin Segment Editor ${{ matrix.arch }}
           path: src-tauri/gen/android/app/build/outputs/apk/universal/release/Jellyfin.Segment.Editor_*.apk
           retention-days: 1
 
