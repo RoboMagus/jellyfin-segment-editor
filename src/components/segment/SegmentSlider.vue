@@ -51,7 +51,8 @@
 
 <script setup lang="ts">
 import { useUtils } from 'src/composables/utils';
-import { ItemDto, MediaSegment } from 'src/interfaces';
+import { MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useAppStore } from 'stores/app';
 import { computed, shallowRef } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -72,9 +73,9 @@ const { t } = useI18n()
 
 interface Props {
   idx: number,
-  item: ItemDto,
-  segment: MediaSegment,
-  segments: MediaSegment[],
+  item: BaseItemDto,
+  segment: MediaSegmentDto,
+  segments: MediaSegmentDto[],
   activeIdx: number,
   newTimestamp?: object,
 }
@@ -95,7 +96,7 @@ const range = computed({
   }
 })
 
-watch(() => props.newTimestamp, (val) => {
+watch(() => props.newTimestamp, (val: any) => {
   if (props.activeIdx == props.idx && val) {
     let start = numberToNumber(range.value.min)
     let end = numberToNumber(range.value.max)

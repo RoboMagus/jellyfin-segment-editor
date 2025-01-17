@@ -129,7 +129,7 @@
 import { useVideoApi } from 'src/composables/videoApi';
 import { useUtils } from 'src/composables/utils';
 import { useAppStore } from 'stores/app';
-import { ImageType, ItemDto, MediaSegmentType } from 'src/interfaces';
+import { ImageType, BaseItemDto, MediaSegmentType } from '@jellyfin/sdk/lib/generated-client';
 import Hls, { ErrorData } from 'hls.js';
 import { nextTick, ref, watch, onBeforeUnmount, computed } from 'vue';
 import { useMediaCapabilities } from 'src/composables/mediaCapabilities';
@@ -155,7 +155,7 @@ const { t } = useI18n()
 const { showVideoPlayer } = storeToRefs(appStore)
 
 interface Props {
-  item: ItemDto,
+  item: BaseItemDto,
   timestamp?: number,
 }
 

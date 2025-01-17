@@ -1,10 +1,10 @@
-import { ItemDto } from 'src/interfaces'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client'
 import { useApiStore } from 'stores/api'
 
 export function usePluginChapterApi() {
   const { fetchWithAuthJson, postJson } = useApiStore()
 
-  async function getChapterById(id: ItemDto) {
+  async function getChapterById(id: BaseItemDto) {
 
     // const response = await fetchWithAuthJson(`PluginChapter/Chapter/${id}`)
     const response = await fetchWithAuthJson(`PluginChapter/Chapter/${id}`)

@@ -8,7 +8,7 @@
         <div class="row items-center q-mt-sm">
           <span>S{{ episode.ParentIndexNumber }}E{{ episode.IndexNumber
           }}</span>
-          <span class="q-ml-xs" v-if="!episode.Name.includes('Episode')">- {{
+          <span class="q-ml-xs" v-if="episode.Name && !episode.Name.includes('Episode')">- {{
             episode.Name
           }}
           </span>
@@ -23,22 +23,22 @@
 </template>
 
 <script setup lang="ts">
-import { ItemDto } from 'src/interfaces';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api';
 import { useItemsStore } from 'stores/items'
 
 const { pushMoreItems } = useItemsStore()
-const { getItems } = useApi();
+const { getEpisodes } = useApi();
 
 interface Props {
-  item: ItemDto
+  item: BaseItemDto
 }
 
 const props = defineProps<Props>()
 
 // fetch episodes of season
-const repisodes = await getItems(props.item.Id);
-const episodes: ItemDto[] = repisodes.Items;
+const repisodes = await getEpisodes(props.item.SeriesId as string, props.item.Id as string);
+const episodes: BaseItemDto[] = repisodes.Items ?? [];
 
 // push items
 pushMoreItems(episodes)

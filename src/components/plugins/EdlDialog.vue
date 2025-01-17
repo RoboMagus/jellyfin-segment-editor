@@ -22,7 +22,7 @@ import { ref } from 'vue';
 let edlData = ref('');
 
 const props = defineProps<{
-  item: ItemDto
+  item: BaseItemDto
 }>()
 
 const { createEdlById, getEdlById } = usePluginEdlApi()

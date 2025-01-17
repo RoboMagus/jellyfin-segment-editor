@@ -10,7 +10,7 @@
 
         <q-chip clickable @click="showDialogWith(segment)" class="q-mb-sm q-mr-sm" :color="getColorByType(segment.Type)"
           v-for="segment in getCurrentSegments" :key="segment.Id + '_chip'">
-          {{ segment.Type }}: {{ getReadableTimeFromSeconds(Math.round(segment.EndTicks - segment.StartTicks)) }}
+          {{ segment.Type }}: {{ getReadableTimeFromSeconds(Math.round((segment.EndTicks ?? 0) - (segment.StartTicks ?? 0))) }}
         </q-chip>
 
         <SegmentAdd :itemId="item.Id" @saveSegment="saveNewSegment" />
@@ -46,12 +46,12 @@
 
 <script lang="ts">
 interface Props {
-  item: ItemDto
+  item: BaseItemDto
 }
 </script>
 
 <script setup lang="ts">
-import { ItemDto, MediaSegment } from 'src/interfaces';
+import { BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
 import { computed, ref } from 'vue';
 import { noop, useResizeObserver, useDebounceFn } from '@vueuse/core'
 import { useUtils } from 'src/composables/utils';
@@ -80,7 +80,7 @@ const props = defineProps<Props>()
 const bar = ref<HTMLBodyElement | undefined>(undefined);
 
 const pwidth = ref(250);
-const dialogSegment = ref<MediaSegment>(new MediaSegment())
+const dialogSegment = ref<MediaSegmentDto>({} as MediaSegmentDto)
 const dialog = ref(false);
 
 // get segments for this id
@@ -95,18 +95,18 @@ useResizeObserver(bar, async (entries) => {
   pwidth.value = width;
 })
 
-const showDialogWith = (segment: MediaSegment) => {
+const showDialogWith = (segment: MediaSegmentDto) => {
   dialogSegment.value = segment;
   dialog.value = true;
 }
 
-const getCurrentSegments = computed(() => localSegments.value.filter((seg: MediaSegment) => seg.ItemId == props.item.Id).sort(sortSegmentsStart))
+const getCurrentSegments = computed(() => localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId == props.item.Id).sort(sortSegmentsStart))
 
 /**
  * Update segment
  * @param segment Modified segment
  */
-const saveUpdatedSegmentLocal = (segment: MediaSegment) => {
+const saveUpdatedSegmentLocal = (segment: MediaSegmentDto) => {
   saveUpdatedSegment(segment)
   // hide dialog
   dialog.value = false
@@ -116,7 +116,7 @@ const saveUpdatedSegmentLocal = (segment: MediaSegment) => {
  * Delete segment
  * @param segment segment to delete
  */
-const deleteSegmentLocal = (segment: MediaSegment) => {
+const deleteSegmentLocal = (segment: MediaSegmentDto) => {
   deleteSegment(segment)
   // hide dialog
   dialog.value = false
@@ -146,12 +146,12 @@ const copyFromSegmentClipboard = () => {
 }
 
 const writeChapter = () => {
-  createChapterById([props.item.Id])
+  createChapterById([props.item.Id as string])
   $q.notify({ message: t('plugin.chapter.created') })
 }
 
 const writeEdl = () => {
-  createEdlById([props.item.Id])
+  createEdlById([props.item.Id as string])
   $q.notify({ message: t('plugin.edl.created') })
 }
 </script>

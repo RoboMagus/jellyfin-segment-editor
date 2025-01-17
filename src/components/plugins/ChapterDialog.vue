@@ -22,7 +22,7 @@ import { ref } from 'vue';
 let chapterData = ref('');
 
 const props = defineProps<{
-  item: ItemDto
+  item: BaseItemDto
 }>()
 
 const { createChapterById, getChapterById } = usePluginChapterApi()
