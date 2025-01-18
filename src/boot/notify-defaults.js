@@ -1,5 +1,5 @@
-import { Notify } from 'quasar'
+import { Notify } from 'quasar';
 
 Notify.setDefaults({
   position: 'top',
-})
+});

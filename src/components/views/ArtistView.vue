@@ -8,10 +8,13 @@
     </div>
   </div>
   <div class="row q-mt-md">
-    <div class="album-cover-container cursor-pointer q-ma-sm relative-position" v-for="item in albums" :key="item.Id"
-      @click="$router.push(`/album/${item.Id}`)">
-      <ItemImage :width="200" :height="200" :item="item">
-      </ItemImage>
+    <div
+      class="album-cover-container cursor-pointer q-ma-sm relative-position"
+      v-for="item in albums"
+      :key="item.Id"
+      @click="$router.push(`/album/${item.Id}`)"
+    >
+      <ItemImage :width="200" :height="200" :item="item"> </ItemImage>
       <div class="text-ellipsis text-center absolute album-cover-subtext">
         {{ item.Name }}
       </div>
@@ -21,24 +24,24 @@
 <script lang="ts" setup>
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api';
-import { useRoute, useRouter } from 'vue-router'
-import { useItemsStore } from 'stores/items'
+import { useRoute, useRouter } from 'vue-router';
+import { useItemsStore } from 'stores/items';
 
-const { pushMoreItems } = useItemsStore()
-const route = useRoute()
-const router = useRouter()
+const { pushMoreItems } = useItemsStore();
+const route = useRoute();
+const router = useRouter();
 const { getItems } = useApi();
 
 // get current item from params
-const itemId = route.params.itemId
+const itemId = route.params.itemId;
 if (itemId === undefined) {
-  router.replace('/')
+  router.replace('/');
 }
 
 const ralbums = await getItems(itemId as string);
 const albums: BaseItemDto[] = ralbums.Items;
 // push items into local cache
-pushMoreItems(albums)
+pushMoreItems(albums);
 </script>
 
 <style>

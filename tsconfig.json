@@ -35,6 +35,6 @@
     "noImplicitOverride": true,
     "noUnusedLocals": true,
     // Avoid cross-os errors due to inconsistent file casing
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

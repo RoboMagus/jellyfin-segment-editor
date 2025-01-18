@@ -1,5 +1,5 @@
 // app global css in SCSS form
-@use "sass:list";
+@use 'sass:list';
 
 // no browser color/decoration for links
 a,
@@ -20,9 +20,12 @@ $dark-shadow-color: #fff !default;
   --q-dark-shadow-opacity: 1;
 }
 
-$shadow-offsets: [ (1px, 3px, 0, 1px, 0, 2px, 1px, -1px),
-  (1px, 5px, 0, 2px, 0, 3px, 1px, -2px), (1px, 8px, 0, 4px, 0, 3px, 3px, -2px),
-  (2px, 4px, -1px, 5px, 0, 1px, 10px, 0), (3px, 5px, -1px, 8px, 0, 1px, 14px, 0),
+$shadow-offsets:
+  [ (1px, 3px, 0, 1px, 0, 2px, 1px, -1px),
+  (1px, 5px, 0, 2px, 0, 3px, 1px, -2px),
+  (1px, 8px, 0, 4px, 0, 3px, 3px, -2px),
+  (2px, 4px, -1px, 5px, 0, 1px, 10px, 0),
+  (3px, 5px, -1px, 8px, 0, 1px, 14px, 0),
   (3px, 5px, -1px, 10px, 0, 1px, 18px, 0),
   (4px, 5px, -2px, 10px, 1px, 2px, 16px, 1px),
   (5px, 5px, -3px, 10px, 1px, 3px, 14px, 2px),
@@ -46,59 +49,112 @@ $shadow-offsets: [ (1px, 3px, 0, 1px, 0, 2px, 1px, -1px),
 @for $i from 1 through length($shadow-offsets) {
   .shadow-#{$i} {
     $offsets: list.nth($shadow-offsets, $i);
-    box-shadow: 0 list.nth($offsets, 1) list.nth($offsets, 2) list.nth($offsets, 3) rgba(var(--q-shadow-color), 0.2),
-    0 #{$i}px list.nth($offsets, 4) list.nth($offsets, 5) rgba(var(--q-shadow-color), 0.14),
-    0 list.nth($offsets, 6) list.nth($offsets, 7) list.nth($offsets, 8) rgba(var(--q-shadow-color), 0.12);
+    box-shadow:
+      0
+        list.nth($offsets, 1)
+        list.nth($offsets, 2)
+        list.nth($offsets, 3)
+        rgba(var(--q-shadow-color), 0.2),
+      0
+        #{$i}px
+        list.nth($offsets, 4)
+        list.nth($offsets, 5)
+        rgba(var(--q-shadow-color), 0.14),
+      0
+        list.nth($offsets, 6)
+        list.nth($offsets, 7)
+        list.nth($offsets, 8)
+        rgba(var(--q-shadow-color), 0.12);
   }
 
   .shadow-up-#{$i } {
     $offsets: list.nth($shadow-offsets, $i);
-    box-shadow: 0 #{0 -
- list.nth($offsets, 1)
+    box-shadow:
+      0
+        #{0 - list.nth($offsets, 1)}
+        list.nth($offsets, 2)
+        list.nth($offsets, 3)
+        rgba(var(--q-shadow-color), 0.2),
+      0
+        #{0 -
+        $i}
+        px
+        list.nth($offsets, 4)
+        list.nth($offsets, 5)
+        rgba(var(--q-shadow-color), 0.14),
+      0
+        list.nth($offsets, 6)
+        list.nth($offsets, 7)
+        list.nth($offsets, 8)
+        rgba(var(--q-shadow-color), 0.12);
   }
 
-  list.nth($offsets, 2) list.nth($offsets, 3) rgba(var(--q-shadow-color), 0.2),
-  0 #{0 -
- $i
-}
+  body.body--dark {
+    .shadow-#{$i } {
+      $offsets: list.nth($shadow-offsets, $i);
+      box-shadow:
+        0
+          list.nth($offsets, 1)
+          list.nth($offsets, 2)
+          list.nth($offsets, 3)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.2 * var(--q-dark-shadow-opacity))
+          ),
+        0
+          #{$i}px
+          list.nth($offsets, 4)
+          list.nth($offsets, 5)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.14 * var(--q-dark-shadow-opacity))
+          ),
+        0
+          list.nth($offsets, 6)
+          list.nth($offsets, 7)
+          list.nth($offsets, 8)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.12 * var(--q-dark-shadow-opacity))
+          );
+    }
 
-px list.nth($offsets, 4) list.nth($offsets, 5) rgba(var(--q-shadow-color), 0.14),
-0 list.nth($offsets, 6) list.nth($offsets, 7) list.nth($offsets, 8) rgba(var(--q-shadow-color), 0.12);
-}
-
-body.body--dark {
-  .shadow-#{$i } {
-    $offsets: list.nth($shadow-offsets, $i);
-    box-shadow: 0 list.nth($offsets, 1) list.nth($offsets, 2) list.nth($offsets, 3) rgba(var(--q-dark-shadow-color),
-      calc(0.2 * var(--q-dark-shadow-opacity))),
-    0 #{$i}px list.nth($offsets, 4) list.nth($offsets, 5) rgba(var(--q-dark-shadow-color),
-      calc(0.14 * var(--q-dark-shadow-opacity))),
-    0 list.nth($offsets, 6) list.nth($offsets, 7) list.nth($offsets, 8) rgba(var(--q-dark-shadow-color),
-      calc(0.12 * var(--q-dark-shadow-opacity)));
+    .shadow-up-#{$i } {
+      $offsets: list.nth($shadow-offsets, $i);
+      box-shadow:
+        0
+          #{0 - list.nth($offsets, 1)}
+          list.nth($offsets, 2)
+          list.nth($offsets, 3)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.2 * var(--q-dark-shadow-opacity))
+          ),
+        0
+          #{0 -
+          $i}
+          px
+          list.nth($offsets, 4)
+          list.nth($offsets, 5)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.14 * var(--q-dark-shadow-opacity))
+          ),
+        0
+          list.nth($offsets, 6)
+          list.nth($offsets, 7)
+          list.nth($offsets, 8)
+          rgba(
+            var(--q-dark-shadow-color),
+            calc(0.12 * var(--q-dark-shadow-opacity))
+          );
+    }
   }
-
-  .shadow-up-#{$i } {
-    $offsets: list.nth($shadow-offsets, $i);
-    box-shadow: 0 #{0 -
- list.nth($offsets, 1)
-  }
-
-  list.nth($offsets, 2) list.nth($offsets, 3) rgba(var(--q-dark-shadow-color),
-    calc(0.2 * var(--q-dark-shadow-opacity))),
-  0 #{0 -
- $i
-}
-
-px list.nth($offsets, 4) list.nth($offsets, 5) rgba(var(--q-dark-shadow-color),
-  calc(0.14 * var(--q-dark-shadow-opacity))),
-0 list.nth($offsets, 6) list.nth($offsets, 7) list.nth($offsets, 8) rgba(var(--q-dark-shadow-color),
-  calc(0.12 * var(--q-dark-shadow-opacity)));
-}
-}
 }
 
 .q-layout__shadow::after {
-  box-shadow: 0 0 10px 2px rgba(var(--q-shadow-color), 0.2),
+  box-shadow:
+    0 0 10px 2px rgba(var(--q-shadow-color), 0.2),
     0 0px 10px rgba(var(--q-shadow-color), 0.24);
 }
 
@@ -111,25 +167,36 @@ px list.nth($offsets, 4) list.nth($offsets, 5) rgba(var(--q-dark-shadow-color),
 }
 
 .q-layout__shadow::after {
-  box-shadow: 0 0 10px 2px rgba(var(--q-shadow-color), 0.2),
+  box-shadow:
+    0 0 10px 2px rgba(var(--q-shadow-color), 0.2),
     0 0px 10px rgba(var(--q-shadow-color), 0.24);
 }
 
 body.body--dark {
   .inset-shadow {
-    box-shadow: 0 7px 9px -7px rgba(var(--q-dark-shadow-color),
-        calc(0.7 * var(--q-dark-shadow-opacity))) inset;
+    box-shadow: 0 7px 9px -7px
+      rgba(var(--q-dark-shadow-color), calc(0.7 * var(--q-dark-shadow-opacity)))
+      inset;
   }
 
   .inset-shadow-down {
-    box-shadow: 0 -7px 9px -7px rgba(var(--q-dark-shadow-color), calc(0.7 * var(--q-dark-shadow-opacity))) inset;
+    box-shadow: 0 -7px 9px -7px
+      rgba(var(--q-dark-shadow-color), calc(0.7 * var(--q-dark-shadow-opacity)))
+      inset;
   }
 
   .q-layout__shadow::after {
-    box-shadow: 0 0 10px 2px rgba(var(--q-dark-shadow-color),
-        calc(0.2 * var(--q-dark-shadow-opacity))),
-      0 0px 10px rgba(var(--q-dark-shadow-color),
-        calc(0.24 * var(--q-dark-shadow-opacity)));
+    box-shadow:
+      0 0 10px 2px
+        rgba(
+          var(--q-dark-shadow-color),
+          calc(0.2 * var(--q-dark-shadow-opacity))
+        ),
+      0 0px 10px
+        rgba(
+          var(--q-dark-shadow-color),
+          calc(0.24 * var(--q-dark-shadow-opacity))
+        );
   }
 }
 
@@ -141,10 +208,19 @@ body.body--dark {
 .q-table__card--dark,
 .q-table--dark,
 .q-uploader--dark {
-  box-shadow: 0 1px 5px rgba(var(--q-dark-shadow-color), calc(0.2 * var(--q-dark-shadow-opacity))),
-    0 2px 2px rgba(var(--q-dark-shadow-color),
-      calc(0.14 * var(--q-dark-shadow-opacity))),
-    0 3px 1px -2px rgba(var(--q-dark-shadow-color), calc(0.12 * var(--q-dark-shadow-opacity)));
+  box-shadow:
+    0 1px 5px
+      rgba(var(--q-dark-shadow-color), calc(0.2 * var(--q-dark-shadow-opacity))),
+    0 2px 2px
+      rgba(
+        var(--q-dark-shadow-color),
+        calc(0.14 * var(--q-dark-shadow-opacity))
+      ),
+    0 3px 1px -2px
+      rgba(
+        var(--q-dark-shadow-color),
+        calc(0.12 * var(--q-dark-shadow-opacity))
+      );
 }
 
 /* ignore from here, leave this comment */
@@ -179,7 +255,6 @@ body.body--dark {
 //--q-shadow-color: 0, 0, 255;
 //--q-dark-shadow-color: 255, 0, 0;
 //}
-
 
 // CUSTOM
 

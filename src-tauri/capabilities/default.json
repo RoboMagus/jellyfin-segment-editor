@@ -2,11 +2,6 @@
   "identifier": "default",
   "description": "default permissions",
   "local": true,
-  "windows": [
-    "main"
-  ],
-  "permissions": [
-    "core:default",
-    "window-state:default"
-  ]
+  "windows": ["main"],
+  "permissions": ["core:default", "window-state:default"]
 }

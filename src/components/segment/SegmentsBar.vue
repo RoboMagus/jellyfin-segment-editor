@@ -2,26 +2,57 @@
   <div class="q-mb-md">
     <div class="row">
       <div>
-        <q-chip clickable @click="$router.push(`/player/${item.Id}`)" class="q-mb-sm q-mr-sm" outline>
+        <q-chip
+          clickable
+          @click="$router.push(`/player/${item.Id}`)"
+          class="q-mb-sm q-mr-sm"
+          outline
+        >
           <q-icon>
             <i-mdi-filmstrip />
           </q-icon>
         </q-chip>
 
-        <q-chip clickable @click="showDialogWith(segment)" class="q-mb-sm q-mr-sm" :color="getColorByType(segment.Type)"
-          v-for="segment in getCurrentSegments" :key="segment.Id + '_chip'">
-          {{ segment.Type }}: {{ getReadableTimeFromSeconds(Math.round((segment.EndTicks ?? 0) - (segment.StartTicks ?? 0))) }}
+        <q-chip
+          clickable
+          @click="showDialogWith(segment)"
+          class="q-mb-sm q-mr-sm"
+          :color="getColorByType(segment.Type)"
+          v-for="segment in getCurrentSegments"
+          :key="segment.Id + '_chip'"
+        >
+          {{ segment.Type }}:
+          {{
+            getReadableTimeFromSeconds(
+              Math.round((segment.EndTicks ?? 0) - (segment.StartTicks ?? 0)),
+            )
+          }}
         </q-chip>
 
         <SegmentAdd :itemId="item.Id" @saveSegment="saveNewSegment" />
-        <SegmentEdit :item="item" v-model="dialog" :segment="dialogSegment" @saveSegment="saveUpdatedSegmentLocal"
-          @deleteSegment="deleteSegmentLocal" />
+        <SegmentEdit
+          :item="item"
+          v-model="dialog"
+          :segment="dialogSegment"
+          @saveSegment="saveUpdatedSegmentLocal"
+          @deleteSegment="deleteSegmentLocal"
+        />
       </div>
       <div class="q-ml-auto">
-        <q-chip v-if="pluginStore.showChapterBtn()" clickable outline @click="writeChapter">
+        <q-chip
+          v-if="pluginStore.showChapterBtn()"
+          clickable
+          outline
+          @click="writeChapter"
+        >
           chap
         </q-chip>
-        <q-chip v-if="pluginStore.showEdlBtn()" clickable outline @click="writeEdl">
+        <q-chip
+          v-if="pluginStore.showEdlBtn()"
+          clickable
+          outline
+          @click="writeEdl"
+        >
           edl
         </q-chip>
         <q-chip clickable outline @click="copyFromSegmentClipboard">
@@ -29,16 +60,30 @@
             <i-mdi-content-paste />
           </q-icon>
         </q-chip>
-        <q-chip clickable outline v-if="getCurrentSegments.length" @click="openConfirmDialog" color="negative">
+        <q-chip
+          clickable
+          outline
+          v-if="getCurrentSegments.length"
+          @click="openConfirmDialog"
+          color="negative"
+        >
           <q-icon>
             <i-mdi-trash-can />
           </q-icon>
         </q-chip>
       </div>
     </div>
-    <div ref="bar" class="segment-bar full-width relative-position segment-bar-color">
-      <SegmentVisual v-for="segment in getCurrentSegments" :key="segment.Id" :segment="segment"
-        :duration="item.RunTimeTicks" :parentWidth="pwidth">
+    <div
+      ref="bar"
+      class="segment-bar full-width relative-position segment-bar-color"
+    >
+      <SegmentVisual
+        v-for="segment in getCurrentSegments"
+        :key="segment.Id"
+        :segment="segment"
+        :duration="item.RunTimeTicks"
+        :parentWidth="pwidth"
+      >
       </SegmentVisual>
     </div>
   </div>
@@ -46,114 +91,129 @@
 
 <script lang="ts">
 interface Props {
-  item: BaseItemDto
+  item: BaseItemDto;
 }
 </script>
 
 <script setup lang="ts">
-import { BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
+import {
+  BaseItemDto,
+  MediaSegmentDto,
+} from '@jellyfin/sdk/lib/generated-client';
 import { computed, ref } from 'vue';
-import { noop, useResizeObserver, useDebounceFn } from '@vueuse/core'
+import { noop, useResizeObserver, useDebounceFn } from '@vueuse/core';
 import { useUtils } from 'src/composables/utils';
 import { useSegmentsStore } from 'stores/segments';
 import { usePluginStore } from 'stores/plugin';
 import { useSessionStore } from 'stores/session';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar';
 import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
 import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
 
-const { getColorByType, getReadableTimeFromSeconds, sortSegmentsStart, generateUUID } = useUtils()
-const { t } = useI18n()
-const $q = useQuasar()
-const { createEdlById } = usePluginEdlApi()
-const { createChapterById } = usePluginChapterApi()
+const {
+  getColorByType,
+  getReadableTimeFromSeconds,
+  sortSegmentsStart,
+  generateUUID,
+} = useUtils();
+const { t } = useI18n();
+const $q = useQuasar();
+const { createEdlById } = usePluginEdlApi();
+const { createChapterById } = usePluginChapterApi();
 
-const pluginStore = usePluginStore()
-const segmentsStore = useSegmentsStore()
-const { getFromSegmentClipboard } = useSessionStore()
-const { saveUpdatedSegment, saveNewSegment, deleteSegment, deleteSegments } = segmentsStore
-const { localSegments } = storeToRefs(segmentsStore)
+const pluginStore = usePluginStore();
+const segmentsStore = useSegmentsStore();
+const { getFromSegmentClipboard } = useSessionStore();
+const { saveUpdatedSegment, saveNewSegment, deleteSegment, deleteSegments } =
+  segmentsStore;
+const { localSegments } = storeToRefs(segmentsStore);
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 const bar = ref<HTMLBodyElement | undefined>(undefined);
 
 const pwidth = ref(250);
-const dialogSegment = ref<MediaSegmentDto>({} as MediaSegmentDto)
+const dialogSegment = ref<MediaSegmentDto>({} as MediaSegmentDto);
 const dialog = ref(false);
 
 // get segments for this id
-segmentsStore.getNewSegmentsById(props.item.Id)
+segmentsStore.getNewSegmentsById(props.item.Id);
 
-const debouncedRequest = useDebounceFn(noop, 500, { maxWait: 1500 })
+const debouncedRequest = useDebounceFn(noop, 500, { maxWait: 1500 });
 
 useResizeObserver(bar, async (entries) => {
-  await debouncedRequest()
-  const entry = entries[0]
-  const { width } = entry.contentRect
+  await debouncedRequest();
+  const entry = entries[0];
+  const { width } = entry.contentRect;
   pwidth.value = width;
-})
+});
 
 const showDialogWith = (segment: MediaSegmentDto) => {
   dialogSegment.value = segment;
   dialog.value = true;
-}
+};
 
-const getCurrentSegments = computed(() => localSegments.value.filter((seg: MediaSegmentDto) => seg.ItemId == props.item.Id).sort(sortSegmentsStart))
+const getCurrentSegments = computed(() =>
+  localSegments.value
+    .filter((seg: MediaSegmentDto) => seg.ItemId == props.item.Id)
+    .sort(sortSegmentsStart),
+);
 
 /**
  * Update segment
  * @param segment Modified segment
  */
 const saveUpdatedSegmentLocal = (segment: MediaSegmentDto) => {
-  saveUpdatedSegment(segment)
+  saveUpdatedSegment(segment);
   // hide dialog
-  dialog.value = false
-}
+  dialog.value = false;
+};
 
 /**
  * Delete segment
  * @param segment segment to delete
  */
 const deleteSegmentLocal = (segment: MediaSegmentDto) => {
-  deleteSegment(segment)
+  deleteSegment(segment);
   // hide dialog
-  dialog.value = false
-}
+  dialog.value = false;
+};
 
 const openConfirmDialog = () => {
   $q.dialog({
-    title: t('editor.deleteSureTitle', { count: getCurrentSegments.value.length }),
+    title: t('editor.deleteSureTitle', {
+      count: getCurrentSegments.value.length,
+    }),
     message: t('editor.deleteSegments', { item: props.item.Name }),
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(() => {
-    deleteSegments(props.item.Id)
-  })
-}
+    deleteSegments(props.item.Id);
+  });
+};
 
 const copyFromSegmentClipboard = () => {
-  let seg = getFromSegmentClipboard()
+  let seg = getFromSegmentClipboard();
   if (seg) {
     // update itemID and id
-    seg.Id = generateUUID()
-    seg.ItemId = props.item.Id
-    saveNewSegment(seg)
+    seg.Id = generateUUID();
+    seg.ItemId = props.item.Id;
+    saveNewSegment(seg);
   } else {
-    $q.notify({ message: t('editor.noSegmentInClipboard'), type: 'negative' })
+    $q.notify({ message: t('editor.noSegmentInClipboard'), type: 'negative' });
   }
-}
+};
 
 const writeChapter = () => {
-  createChapterById([props.item.Id as string])
-  $q.notify({ message: t('plugin.chapter.created') })
-}
+  createChapterById([props.item.Id as string]);
+  $q.notify({ message: t('plugin.chapter.created') });
+};
 
 const writeEdl = () => {
-  createEdlById([props.item.Id as string])
-  $q.notify({ message: t('plugin.edl.created') })
-}
+  createEdlById([props.item.Id as string]);
+  $q.notify({ message: t('plugin.edl.created') });
+};
 </script>
 
 <style>

@@ -1,20 +1,36 @@
 <template>
   <div v-if="showVideoPlayer" class="row justify-center">
     <div class="relative-position">
-      <div class="relative-position" @click="playing = !playing" style="width:900px;height:506px">
-        <video class="video-container fit" ref="mediaElementRef" :poster="posterUrl" crossorigin="anonymous" playsinline
-          @loadeddata="onLoadedData">
-        </video>
+      <div
+        class="relative-position"
+        @click="playing = !playing"
+        style="width: 900px; height: 506px"
+      >
+        <video
+          class="video-container fit"
+          ref="mediaElementRef"
+          :poster="posterUrl"
+          crossorigin="anonymous"
+          playsinline
+          @loadeddata="onLoadedData"
+        ></video>
       </div>
       <div class="relative-position column q-mt-md">
         <div class="row items-center">
           <div class="q-mx-sm">
             {{ getTimefromSeconds(currentTime) }}
           </div>
-          <PlayerScrubber v-model="currentTime" :max="duration" :secondary="endBuffer" class="col-grow">
+          <PlayerScrubber
+            v-model="currentTime"
+            :max="duration"
+            :secondary="endBuffer"
+            class="col-grow"
+          >
             <template #default="{ position, pendingValue }">
-              <div class="absolute bg-black rounded-borders q-px-sm q-mb-lg q-py-xs text-xs text-white"
-                :style="{ left: position, top: '-50px' }">
+              <div
+                class="absolute bg-black rounded-borders q-px-sm q-mb-lg q-py-xs text-xs text-white"
+                :style="{ left: position, top: '-50px' }"
+              >
                 {{ getTimefromSeconds(pendingValue) }}
               </div>
             </template>
@@ -35,7 +51,15 @@
             </q-icon>
             <q-menu anchor="top left" self="bottom left">
               <div class="transparent q-my-md q-mx-sm">
-                <q-slider @click.stop :min="0" :max="1" :step="0.1" vertical reverse v-model="volume">
+                <q-slider
+                  @click.stop
+                  :min="0"
+                  :max="1"
+                  :step="0.1"
+                  vertical
+                  reverse
+                  v-model="volume"
+                >
                 </q-slider>
               </div>
             </q-menu>
@@ -45,8 +69,13 @@
             {{ skipTime[currentSkipTimeIndex] }}s
             <q-menu auto-close anchor="top left" self="bottom left">
               <q-list>
-                <q-item clickable @click="currentSkipTimeIndex = index" v-for="(item, index) in skipTime" :key="index"
-                  :value="index">
+                <q-item
+                  clickable
+                  @click="currentSkipTimeIndex = index"
+                  v-for="(item, index) in skipTime"
+                  :key="index"
+                  :value="index"
+                >
                   <q-item-section>{{ item }}</q-item-section>
                 </q-item>
               </q-list>
@@ -57,21 +86,42 @@
             <q-icon><i-mdi-plus /></q-icon>
             <q-menu auto-close anchor="top left" self="bottom left">
               <q-list>
-                <q-item clickable @click="$emit('createSegment', { start: numberToNumber(currentTime), type: item })"
-                  v-for="(item, index) in Object.values(MediaSegmentType)" :key="index" :value="index">
+                <q-item
+                  clickable
+                  @click="
+                    $emit('createSegment', {
+                      start: numberToNumber(currentTime),
+                      type: item,
+                    })
+                  "
+                  v-for="(item, index) in Object.values(MediaSegmentType)"
+                  :key="index"
+                  :value="index"
+                >
                   <q-item-section>{{ item }}</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-btn>
 
-          <q-btn class="q-ml-sm" outline round dense @click="pushTimestamp(true)">
+          <q-btn
+            class="q-ml-sm"
+            outline
+            round
+            dense
+            @click="pushTimestamp(true)"
+          >
             <q-icon>
               <i-mdi-ray-start-arrow />
-
             </q-icon>
           </q-btn>
-          <q-btn class="q-ml-sm" outline round dense @click="pushTimestamp(false)">
+          <q-btn
+            class="q-ml-sm"
+            outline
+            round
+            dense
+            @click="pushTimestamp(false)"
+          >
             <q-icon>
               <i-mdi-ray-end-arrow />
             </q-icon>
@@ -81,25 +131,32 @@
             <q-icon><i-mdi-information /></q-icon>
             <q-menu anchor="top left" self="bottom left">
               <div class="q-pa-md">
-                <span>Use
-                  <KeyboardKeys :keyboardKeys="['enter']" /> to play/pause the player
+                <span
+                  >Use <KeyboardKeys :keyboardKeys="['enter']" /> to play/pause
+                  the player
                 </span>
-                <br>
-                <span>Use
-                  <KeyboardKeys :keyboardKeys="['a', 'd']" /> to change the timestamp
+                <br />
+                <span
+                  >Use <KeyboardKeys :keyboardKeys="['a', 'd']" /> to change the
+                  timestamp
                 </span>
-                <br>
-                <span>Use
-                  <KeyboardKeys :keyboardKeys="['w', 's']" /> to change the skip timespan
+                <br />
+                <span
+                  >Use <KeyboardKeys :keyboardKeys="['w', 's']" /> to change the
+                  skip timespan
                 </span>
-                <br>
-                <span>Use
-                  <KeyboardKeys :keyboardKeys="['e']" /> to copy current timestamp as start
-                </span><br>
-                <span>Use
-                  <KeyboardKeys :keyboardKeys="['f']" /> to copy current timestamp as end
-                </span><br>
-                <span>You can switch the target segment slider by clicking on the segment type
+                <br />
+                <span
+                  >Use <KeyboardKeys :keyboardKeys="['e']" /> to copy current
+                  timestamp as start </span
+                ><br />
+                <span
+                  >Use <KeyboardKeys :keyboardKeys="['f']" /> to copy current
+                  timestamp as end </span
+                ><br />
+                <span
+                  >You can switch the target segment slider by clicking on the
+                  segment type
                 </span>
               </div>
             </q-menu>
@@ -110,13 +167,33 @@
   </div>
   <div class="row">
     <div class="q-ml-auto">
-      <q-btn v-if="pluginStore.showChapterBtn()" class="q-mx-sm" @click="writeChapter" round outline dense>
+      <q-btn
+        v-if="pluginStore.showChapterBtn()"
+        class="q-mx-sm"
+        @click="writeChapter"
+        round
+        outline
+        dense
+      >
         chap
       </q-btn>
-      <q-btn v-if="pluginStore.showEdlBtn()" class="q-mx-sm" @click="writeEdl" round outline dense>
+      <q-btn
+        v-if="pluginStore.showEdlBtn()"
+        class="q-mx-sm"
+        @click="writeEdl"
+        round
+        outline
+        dense
+      >
         edl
       </q-btn>
-      <q-btn class="q-mx-sm" @click="copyFromSegmentClipboard" round outline dense>
+      <q-btn
+        class="q-mx-sm"
+        @click="copyFromSegmentClipboard"
+        round
+        outline
+        dense
+      >
         <q-icon>
           <i-mdi-content-paste />
         </q-icon>
@@ -129,43 +206,55 @@
 import { useVideoApi } from 'src/composables/videoApi';
 import { useUtils } from 'src/composables/utils';
 import { useAppStore } from 'stores/app';
-import { ImageType, BaseItemDto, MediaSegmentType } from '@jellyfin/sdk/lib/generated-client';
+import {
+  ImageType,
+  BaseItemDto,
+  MediaSegmentType,
+} from '@jellyfin/sdk/lib/generated-client';
 import Hls, { ErrorData } from 'hls.js';
 import { nextTick, ref, watch, onBeforeUnmount, computed } from 'vue';
 import { useMediaCapabilities } from 'src/composables/mediaCapabilities';
-import { useMediaControls, computedAsync, whenever, useMagicKeys, useThrottleFn, onKeyStroke } from '@vueuse/core';
+import {
+  useMediaControls,
+  computedAsync,
+  whenever,
+  useMagicKeys,
+  useThrottleFn,
+  onKeyStroke,
+} from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { usePluginEdlApi } from 'src/composables/pluginEdlApi'
-import { usePluginChapterApi } from 'src/composables/pluginChapterApi'
+import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
+import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { useSessionStore } from 'src/stores/session';
 import { usePluginStore } from 'src/stores/plugin';
 
-const { createEdlById } = usePluginEdlApi()
-const { createChapterById } = usePluginChapterApi()
-const pluginStore = usePluginStore()
-const { getItemImageUrl, getTimefromSeconds, numberToNumber } = useUtils()
-const { getVideoStream } = useVideoApi()
-const { testMediaStream, getMediaContainer, toJellyfinContainer } = useMediaCapabilities()
-const appStore = useAppStore()
-const { getFromSegmentClipboard } = useSessionStore()
-const { notify } = useQuasar()
-const { t } = useI18n()
-const { showVideoPlayer } = storeToRefs(appStore)
+const { createEdlById } = usePluginEdlApi();
+const { createChapterById } = usePluginChapterApi();
+const pluginStore = usePluginStore();
+const { getItemImageUrl, getTimefromSeconds, numberToNumber } = useUtils();
+const { getVideoStream } = useVideoApi();
+const { testMediaStream, getMediaContainer, toJellyfinContainer } =
+  useMediaCapabilities();
+const appStore = useAppStore();
+const { getFromSegmentClipboard } = useSessionStore();
+const { notify } = useQuasar();
+const { t } = useI18n();
+const { showVideoPlayer } = storeToRefs(appStore);
 
 interface Props {
-  item: BaseItemDto,
-  timestamp?: number,
+  item: BaseItemDto;
+  timestamp?: number;
 }
 
-const emit = defineEmits(['createSegment', 'updateSegmentTimestamp'])
-const props = defineProps<Props>()
+const emit = defineEmits(['createSegment', 'updateSegmentTimestamp']);
+const props = defineProps<Props>();
 const mediaElementRef = ref<HTMLMediaElement>();
 const mediaControls = useMediaControls(mediaElementRef);
 const videoUrl = ref<string>('');
-const skipTime = ref([0.001, 0.01, 0.1, 1, 5])
-const currentSkipTimeIndex = ref(4)
+const skipTime = ref([0.001, 0.01, 0.1, 1, 5]);
+const currentSkipTimeIndex = ref(4);
 
 const {
   playing,
@@ -179,28 +268,47 @@ const {
   muted,
   enableTrack,
   disableTrack,
-} = mediaControls
+} = mediaControls;
 
-const endBuffer = computed(() => buffered.value.length > 0 ? buffered.value[buffered.value.length - 1][1] : 0)
+const endBuffer = computed(() =>
+  buffered.value.length > 0 ? buffered.value[buffered.value.length - 1][1] : 0,
+);
 
 const throttledForwardFn = useThrottleFn(() => {
-  currentTime.value += Math.min(skipTime.value[currentSkipTimeIndex.value], duration.value)
+  currentTime.value += Math.min(
+    skipTime.value[currentSkipTimeIndex.value],
+    duration.value,
+  );
 }, 100);
 
 const throttledBackwardFn = useThrottleFn(() => {
-  currentTime.value -= Math.max(skipTime.value[currentSkipTimeIndex.value], 0)
+  currentTime.value -= Math.max(skipTime.value[currentSkipTimeIndex.value], 0);
 }, 100);
 
 // just bind keys if player is active
 if (showVideoPlayer) {
   const keys = useMagicKeys();
 
-  whenever(keys.space, () => playing.value = !playing.value);
-  whenever(keys.m, () => muted.value = !muted.value);
-  whenever(keys.w, () => currentSkipTimeIndex.value = Math.min(currentSkipTimeIndex.value + 1, skipTime.value.length - 1));
-  whenever(keys.s, () => currentSkipTimeIndex.value = Math.max(currentSkipTimeIndex.value - 1, 0));
-  whenever(keys.e, () => pushTimestamp(true))
-  whenever(keys.f, () => pushTimestamp(false))
+  whenever(keys.space, () => (playing.value = !playing.value));
+  whenever(keys.m, () => (muted.value = !muted.value));
+  whenever(
+    keys.w,
+    () =>
+      (currentSkipTimeIndex.value = Math.min(
+        currentSkipTimeIndex.value + 1,
+        skipTime.value.length - 1,
+      )),
+  );
+  whenever(
+    keys.s,
+    () =>
+      (currentSkipTimeIndex.value = Math.max(
+        currentSkipTimeIndex.value - 1,
+        0,
+      )),
+  );
+  whenever(keys.e, () => pushTimestamp(true));
+  whenever(keys.f, () => pushTimestamp(false));
 
   onKeyStroke(['j', 'a'], throttledBackwardFn);
   onKeyStroke(['l', 'd'], throttledForwardFn);
@@ -211,75 +319,78 @@ if (showVideoPlayer) {
  * @param start start or end time
  */
 const pushTimestamp = (start: boolean) => {
-  emit('updateSegmentTimestamp', { currentTime, start })
-}
+  emit('updateSegmentTimestamp', { currentTime, start });
+};
 
 /**
  * Get Video for item
  */
 const getVideo = async () => {
-  if (!showVideoPlayer.value)
-    return;
+  if (!showVideoPlayer.value) return;
 
-  let forceVideoReason = undefined
+  let forceVideoReason = undefined;
   let forceAudioReason = undefined;
-  let container = 'ts'
+  let container = 'ts';
 
   // eval browser support
   if (navigator.mediaCapabilities) {
-    console.log('titem:', props.item)
+    console.log('titem:', props.item);
     // get streams
-    const videos = props.item.MediaStreams.filter((s) => s.Type == 'Video')
-    const audio = props.item.MediaStreams.filter((s) => s.Type == 'Audio')
+    const videos = props.item.MediaStreams.filter((s) => s.Type == 'Video');
+    const audio = props.item.MediaStreams.filter((s) => s.Type == 'Audio');
 
     // test if first video stream is playable.
     if (videos.length) {
-      const res = await testMediaStream(videos[0])
+      const res = await testMediaStream(videos[0]);
       if (res) {
-        console.log('testVideo:', res)
+        console.log('testVideo:', res);
         if (!res.supported) {
-          forceVideoReason = videos[0].Codec
+          forceVideoReason = videos[0].Codec;
         } else {
-          let c = toJellyfinContainer(getMediaContainer(videos[0])[0])
-          if (c)
-            container = c
+          let c = toJellyfinContainer(getMediaContainer(videos[0])[0]);
+          if (c) container = c;
         }
       } else {
-        forceVideoReason = videos[0].Codec
+        forceVideoReason = videos[0].Codec;
       }
     }
     if (audio.length) {
       // test selected audio stream
-      const res = await testMediaStream(audio[0])
+      const res = await testMediaStream(audio[0]);
       if (res) {
-        console.log('testAudio:', res)
-        if (!res.supported)
-          forceAudioReason = audio[0].Codec
+        console.log('testAudio:', res);
+        if (!res.supported) forceAudioReason = audio[0].Codec;
       } else {
-        forceAudioReason = audio[0].Codec
+        forceAudioReason = audio[0].Codec;
       }
     }
   } else {
     // Not available for chromium < 66 (support for webos 5+ and Tizen 6 (not 5!))
     // not detected
-    forceVideoReason = '-'
-    forceAudioReason = '-'
+    forceVideoReason = '-';
+    forceAudioReason = '-';
   }
-  videoUrl.value = getVideoStream(props.item.Id, forceVideoReason, forceAudioReason, container)
-}
-
+  videoUrl.value = getVideoStream(
+    props.item.Id,
+    forceVideoReason,
+    forceAudioReason,
+    container,
+  );
+};
 
 const posterUrl = computedAsync(
   async () => {
-    return showVideoPlayer ? await getItemImageUrl(props.item, 900, 506, ImageType.Backdrop) : ''
+    return showVideoPlayer
+      ? await getItemImageUrl(props.item, 900, 506, ImageType.Backdrop)
+      : '';
   },
   '', // initial state
-)
+);
 
 const hls = Hls.isSupported()
   ? new Hls({
-    testBandwidth: false
-  })
+      testBandwidth: false,
+    })
   : undefined;
 
 /**
@@ -304,7 +415,7 @@ async function onLoadedData(): Promise<void> {
 
   }
   */
-  console.log('Player loaded data!')
+  console.log('Player loaded data!');
 }
 
 /**
@@ -332,7 +443,7 @@ function onHlsEror(_event: typeof Hls.Events.ERROR, data: ErrorData): void {
          */
         // useSnackbar(t('errors.cantPlayItem'), 'error');
         // playbackManager.stop();
-        console.log('hls player error', data)
+        console.log('hls player error', data);
         break;
       }
     }
@@ -340,25 +451,29 @@ function onHlsEror(_event: typeof Hls.Events.ERROR, data: ErrorData): void {
 }
 
 const writeChapter = () => {
-  createChapterById([props.item.Id])
-  notify({ message: t('plugin.chapter.created') })
-}
+  createChapterById([props.item.Id]);
+  notify({ message: t('plugin.chapter.created') });
+};
 
 const writeEdl = () => {
-  createEdlById([props.item.Id])
-  notify({ message: t('plugin.edl.created') })
-}
+  createEdlById([props.item.Id]);
+  notify({ message: t('plugin.edl.created') });
+};
 
 const copyFromSegmentClipboard = () => {
-  let seg = getFromSegmentClipboard()
+  let seg = getFromSegmentClipboard();
   if (seg) {
     // update itemID and id
-    seg.ItemId = props.item.Id
-    emit('createSegment', { start: seg.StartTicks, end: seg.EndTicks, type: seg.Type })
+    seg.ItemId = props.item.Id;
+    emit('createSegment', {
+      start: seg.StartTicks,
+      end: seg.EndTicks,
+      type: seg.Type,
+    });
   } else {
-    notify({ message: t('editor.noSegmentInClipboard'), type: 'negative' })
+    notify({ message: t('editor.noSegmentInClipboard'), type: 'negative' });
   }
-}
+};
 
 watch(mediaElementRef, async () => {
   await nextTick();
@@ -383,7 +498,7 @@ watch(
 
     if (
       mediaElementRef.value &&
-      (/*playbackManager.currentMediaSource?.SupportsDirectPlay ||*/ !hls)
+      /*playbackManager.currentMediaSource?.SupportsDirectPlay ||*/ !hls
     ) {
       /**
        * For the video case, Safari iOS doesn't support hls.js but supports native HLS
@@ -392,7 +507,7 @@ watch(
     } else if (hls) {
       hls.loadSource(videoUrl.value);
     }
-  }
+  },
 );
 
 // set time whenever a segment requests a change
@@ -402,12 +517,12 @@ watch(
     if (props.timestamp != undefined && showVideoPlayer.value) {
       currentTime.value = props.timestamp ?? 0;
     }
-  }
+  },
 );
 
-onBeforeUnmount(() => detachHls())
+onBeforeUnmount(() => detachHls());
 
-await getVideo()
+await getVideo();
 </script>
 
 <style>

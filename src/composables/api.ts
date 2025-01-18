@@ -1,31 +1,34 @@
-import { useApiStore } from 'stores/api'
+import { useApiStore } from 'stores/api';
 
-import { ImageType, ItemsApiGetItemsRequest, TvShowsApiGetEpisodesRequest } from '@jellyfin/sdk/lib/generated-client';
-import { getItemsApi  } from '@jellyfin/sdk/lib/utils/api/items-api'
-import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api'
-import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api'
-import { Jellyfin } from '@jellyfin/sdk'
-import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client'
-
+import {
+  ImageType,
+  ItemsApiGetItemsRequest,
+  TvShowsApiGetEpisodesRequest,
+} from '@jellyfin/sdk/lib/generated-client';
+import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api';
+import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api';
+import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api';
+import { Jellyfin } from '@jellyfin/sdk';
+import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client';
 
 export function useApi() {
-  const { fetchWithAuth, serverAddress, apiKey } = useApiStore()
+  const { fetchWithAuth, serverAddress, apiKey } = useApiStore();
   const jellyfin = new Jellyfin({
     clientInfo: {
       name: 'Jellyfin Segment Editor',
-      version: '0.4.7'
+      version: '0.4.8',
     },
     deviceInfo: {
       name: 'Web Browser',
-      id: 'segment-editor-browser'
-    }
-  })
-  const api = jellyfin.createApi(serverAddress, apiKey)
+      id: 'segment-editor-browser',
+    },
+  });
+  const api = jellyfin.createApi(serverAddress, apiKey);
 
   // Get the typed API client
-  const itemsApi = getItemsApi(api)
-  const libraryStructureApi = getLibraryStructureApi(api)
-  const tvShowsApi = getTvShowsApi(api)
+  const itemsApi = getItemsApi(api);
+  const libraryStructureApi = getLibraryStructureApi(api);
+  const tvShowsApi = getTvShowsApi(api);
   /*
     type RequestBody = {
       userId: number
@@ -75,16 +78,16 @@ export function useApi() {
       parentId: collectionId,
       fields: [ItemFields.MediaStreams],
       sortBy: [ItemSortBy.AiredEpisodeOrder, ItemSortBy.SortName],
-      isMissing: false
-    }
-    const response = await itemsApi.getItems(params)
-    return response.data
+      isMissing: false,
+    };
+    const response = await itemsApi.getItems(params);
+    return response.data;
   }
 
   // Get all collections
   async function getCollections() {
-    const libraries = await libraryStructureApi.getVirtualFolders()
-    return libraries.data
+    const libraries = await libraryStructureApi.getVirtualFolders();
+    return libraries.data;
   }
 
   // Get all episodes for a season
@@ -94,23 +97,28 @@ export function useApi() {
       seriesId: seriesId,
       fields: [ItemFields.MediaStreams],
       sortBy: ItemSortBy.AiredEpisodeOrder,
-      isMissing: false
-    }
-    const episodes = await tvShowsApi.getEpisodes(params)
-    return episodes.data
+      isMissing: false,
+    };
+    const episodes = await tvShowsApi.getEpisodes(params);
+    return episodes.data;
   }
 
   // Get Image for item
-  async function getImage(itemId: string, width = 133, height = 200, type: ImageType = ImageType.Primary) {
+  async function getImage(
+    itemId: string,
+    width = 133,
+    height = 200,
+    type: ImageType = ImageType.Primary,
+  ) {
     const query: Map<string, any> = new Map();
 
     query.set('tag', `segmenteditor_${itemId}_${type}`);
     query.set('width', width);
     query.set('height', height);
 
-    const image = await fetchWithAuth(`Items/${itemId}/Images/${type}`)
-    return image
+    const image = await fetchWithAuth(`Items/${itemId}/Images/${type}`);
+    return image;
   }
 
-  return { getItems, getEpisodes, getImage, getCollections }
+  return { getItems, getEpisodes, getImage, getCollections };
 }

@@ -1,52 +1,64 @@
 <template>
   <div class="relative-position">
-    <BlurhashImage :width="width" :height="height" :item="item" class="absolute-top-left" />
+    <BlurhashImage
+      :width="width"
+      :height="height"
+      :item="item"
+      class="absolute-top-left"
+    />
     <Transition name="fade">
-      <img v-show="isLoaded" v-intersection.once="onIntersect" ref="image" :width="width" :height="height"
-        class="absolute-top-left">
+      <img
+        v-show="isLoaded"
+        v-intersection.once="onIntersect"
+        ref="image"
+        :width="width"
+        :height="height"
+        class="absolute-top-left"
+      />
     </Transition>
   </div>
 </template>
 
 <script lang="ts">
 interface Props {
-  item: BaseItemDto,
-  width: number,
-  height: number,
-  preferBackdrop?: boolean
+  item: BaseItemDto;
+  width: number;
+  height: number;
+  preferBackdrop?: boolean;
 }
 </script>
 
-<script setup lang = "ts" >
-import { ref } from 'vue'
-import { useApi } from 'src/composables/api'
-import { useUtils } from 'src/composables/utils'
-import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client'
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useApi } from 'src/composables/api';
+import { useUtils } from 'src/composables/utils';
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 
-const { getImage } = useApi()
-const { getImageOfStream } = useUtils()
+const { getImage } = useApi();
+const { getImageOfStream } = useUtils();
 
-const isLoaded = ref(false)
-const image = ref<HTMLImageElement | undefined>(undefined)
+const isLoaded = ref(false);
+const image = ref<HTMLImageElement | undefined>(undefined);
 
 const props = withDefaults(defineProps<Props>(), {
   width: 32,
   height: 32,
-})
+});
 
 const onIntersect = () => {
-  getImage(props.item.Id as string, props.width, props.height).then((response) => getImageOfStream(response)).then((url) => {
-    if (image.value) {
-      image.value.src = url
-    }
-  })
+  getImage(props.item.Id as string, props.width, props.height)
+    .then((response) => getImageOfStream(response))
+    .then((url) => {
+      if (image.value) {
+        image.value.src = url;
+      }
+    });
   if (image.value) {
     image.value.onload = () => {
-      isLoaded.value = true
-    }
+      isLoaded.value = true;
+    };
   }
-}
-
+};
 </script>
 
 <style>

@@ -6,12 +6,19 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: 'player/:itemId', component: () => import('pages/PlayerPage.vue') },
-      { path: 'series/:itemId', component: () => import('pages/SeriesPage.vue') },
-      { path: 'artist/:itemId', component: () => import('pages/ArtistPage.vue') },
-      { path: 'album/:itemId', component: () => import('pages/AlbumPage.vue') }
-
-
+      {
+        path: 'player/:itemId',
+        component: () => import('pages/PlayerPage.vue'),
+      },
+      {
+        path: 'series/:itemId',
+        component: () => import('pages/SeriesPage.vue'),
+      },
+      {
+        path: 'artist/:itemId',
+        component: () => import('pages/ArtistPage.vue'),
+      },
+      { path: 'album/:itemId', component: () => import('pages/AlbumPage.vue') },
     ],
   },
 

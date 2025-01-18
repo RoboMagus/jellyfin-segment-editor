@@ -4,15 +4,15 @@ import { markRaw } from 'vue';
 import { defineStore } from 'pinia';
 
 export type Modal = {
-  isOpen: boolean,
-  view: object,
-  actions?: ModalAction[],
-  viewProps?: object,
+  isOpen: boolean;
+  view: object;
+  actions?: ModalAction[];
+  viewProps?: object;
 };
 
 export type ModalAction = {
-  label: string,
-  callback: (props?: any) => void,
+  label: string;
+  callback: (props?: any) => void;
 };
 
 export const useModalStore = defineStore('modal', {
@@ -20,7 +20,7 @@ export const useModalStore = defineStore('modal', {
     isOpen: false,
     view: {},
     actions: [],
-    viewProps: {}
+    viewProps: {},
   }),
   actions: {
     init(view: object, actions?: ModalAction[], props?: object) {
@@ -36,7 +36,7 @@ export const useModalStore = defineStore('modal', {
       this.isOpen = false;
       this.view = {};
       this.actions = [];
-      this, this.viewProps = {};
+      this, (this.viewProps = {});
     },
   },
   persist: false,

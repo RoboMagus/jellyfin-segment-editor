@@ -1,19 +1,28 @@
-import { ImageType, BaseItemDto, MediaSegmentDto } from '@jellyfin/sdk/lib/generated-client';
-import { useApi } from 'src/composables/api'
+import {
+  ImageType,
+  BaseItemDto,
+  MediaSegmentDto,
+} from '@jellyfin/sdk/lib/generated-client';
+import { useApi } from 'src/composables/api';
 
 export function useUtils() {
-  const { getImage } = useApi()
+  const { getImage } = useApi();
 
   /**
    * Get image url from item
    * @param item item
    * @param imgType image type
    */
-  async function getItemImageUrl(item: BaseItemDto, width: number, height: number, imgType: ImageType) {
+  async function getItemImageUrl(
+    item: BaseItemDto,
+    width: number,
+    height: number,
+    imgType: ImageType,
+  ) {
     let imgTag;
     let itemId: string = item.Id as string;
 
-    const preferBackdrop = imgType == ImageType.Backdrop
+    const preferBackdrop = imgType == ImageType.Backdrop;
 
     if (
       preferBackdrop &&
@@ -59,9 +68,9 @@ export function useUtils() {
         : undefined;
   }*/
 
-    const res = await getImage(itemId, width, height, imgType)
-    const url = await getImageOfStream(res)
-    return url
+    const res = await getImage(itemId, width, height, imgType);
+    const url = await getImageOfStream(res);
+    return url;
   }
 
   // Get image of a Request body stream
@@ -86,28 +95,28 @@ export function useUtils() {
     });
 
     // Create a new response out of the stream
-    const newres = new Response(readableStream)
+    const newres = new Response(readableStream);
     // Create an object URL for the response
-    const blob = await newres.blob()
-    return URL.createObjectURL(blob)
+    const blob = await newres.blob();
+    return URL.createObjectURL(blob);
   }
 
   function getColorByType(type: MediaSegmentDto['Type']) {
     switch (type) {
       case 'Intro':
-        return 'green-5'
+        return 'green-5';
       case 'Outro':
-        return 'purple-4'
+        return 'purple-4';
       case 'Preview':
-        return 'light-green'
+        return 'light-green';
       case 'Recap':
-        return 'lime'
+        return 'lime';
       case 'Commercial':
-        return 'red'
+        return 'red';
       case 'Unknown':
-        return 'grey-6'
+        return 'grey-6';
       default:
-        return 'white'
+        return 'white';
     }
   }
 
@@ -126,11 +135,11 @@ export function useUtils() {
   }
 
   /**
-* Converts seconds to Ticks
-*
-* @param ticks - Number of .NET ticks to convert
-* @returns The converted value in ticks
-*/
+   * Converts seconds to Ticks
+   *
+   * @param ticks - Number of .NET ticks to convert
+   * @returns The converted value in ticks
+   */
   function secondsToTicks(seconds: number | null | undefined): number {
     if (!seconds) {
       seconds = 0;
@@ -145,7 +154,7 @@ export function useUtils() {
    * @returns
    */
   function stringToNumber(numb: string) {
-    return Math.round((Number.parseFloat(numb) + Number.EPSILON) * 1000) / 1000
+    return Math.round((Number.parseFloat(numb) + Number.EPSILON) * 1000) / 1000;
   }
 
   /**
@@ -154,9 +163,8 @@ export function useUtils() {
    * @returns
    */
   function numberToNumber(numb: number) {
-    return Math.round((numb + Number.EPSILON) * 1000) / 1000
+    return Math.round((numb + Number.EPSILON) * 1000) / 1000;
   }
-
 
   /**
    * Array.sort() function to sort by Segment.Start
@@ -202,20 +210,19 @@ export function useUtils() {
   }
 
   /**
- * Convert seconds into a time string like so '1:10:20'
- * @param timeInsSeconds The seconds to convert
- * @returns time tring
- */
+   * Convert seconds into a time string like so '1:10:20'
+   * @param timeInsSeconds The seconds to convert
+   * @returns time tring
+   */
   function getTimefromSeconds(timeInsSeconds: number) {
-
     const minsTemp = timeInsSeconds / 60;
     let hours = Math.floor(minsTemp / 60);
 
-    const minTemp1 = Math.floor(minsTemp % 60)
+    const minTemp1 = Math.floor(minsTemp % 60);
     const mins = minTemp1 < 10 ? `0${minTemp1}` : `${minTemp1}`;
 
     const secsTemp1 = Math.floor(timeInsSeconds % 60);
-    const secs = secsTemp1 < 10 ? `0${secsTemp1}` : `${secsTemp1}`
+    const secs = secsTemp1 < 10 ? `0${secsTemp1}` : `${secsTemp1}`;
 
     const ms = (timeInsSeconds % 1).toFixed(3).substring(2);
 
@@ -231,7 +238,6 @@ export function useUtils() {
     } else if (hours !== 0) {
       return `${hours}:${mins}:${secs}:${ms}`;
     }
-
   }
 
   /**
@@ -240,33 +246,27 @@ export function useUtils() {
    * @returns time in seconds
    */
   function getSecondsFromTime(time: string | number | undefined) {
-    if (time == undefined)
-      return 0
+    if (time == undefined) return 0;
     const ntime = typeof time === 'string' ? time.trim() : String(time);
 
     let splitted = new Array<string>();
     // prepare format
     if ([':', ' '].filter((el) => ntime.includes(el)))
-      splitted = ntime.split(':')
-    if (splitted.length == 1)
-      splitted = ntime.split(' ')
+      splitted = ntime.split(':');
+    if (splitted.length == 1) splitted = ntime.split(' ');
     // last segment is seconds
-    const sec = splitted.pop()?.trim()
-    const min = splitted.pop()?.trim()
-    const h = splitted.pop()?.trim()
+    const sec = splitted.pop()?.trim();
+    const min = splitted.pop()?.trim();
+    const h = splitted.pop()?.trim();
 
-    let totalSecs = 0
+    let totalSecs = 0;
 
-    if (sec != undefined)
-      totalSecs += Number.parseFloat(sec)
-    if (min != undefined)
-      totalSecs += Number.parseFloat(min) * 60
-    if (h != undefined)
-      totalSecs += Number.parseFloat(h) * 60 * 60
+    if (sec != undefined) totalSecs += Number.parseFloat(sec);
+    if (min != undefined) totalSecs += Number.parseFloat(min) * 60;
+    if (h != undefined) totalSecs += Number.parseFloat(h) * 60 * 60;
 
-    return totalSecs
+    return totalSecs;
   }
-
 
   /**
    * Create uuid
@@ -274,19 +274,39 @@ export function useUtils() {
    */
   function generateUUID() {
     let d = new Date().getTime();
-    let d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      let r = Math.random() * 16;
-      if (d > 0) {
-        r = (d + r) % 16 | 0;
-        d = Math.floor(d / 16);
-      } else {
-        r = (d2 + r) % 16 | 0;
-        d2 = Math.floor(d2 / 16);
-      }
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
+    let d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0;
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        let r = Math.random() * 16;
+        if (d > 0) {
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      },
+    );
   }
 
-  return { getImageOfStream, getColorByType, getReadableTimeFromSeconds, getTimefromSeconds, getSecondsFromTime, ticksToMs, secondsToTicks, stringToNumber, numberToNumber, sortSegmentsStart, getItemImageUrl, generateUUID }
+  return {
+    getImageOfStream,
+    getColorByType,
+    getReadableTimeFromSeconds,
+    getTimefromSeconds,
+    getSecondsFromTime,
+    ticksToMs,
+    secondsToTicks,
+    stringToNumber,
+    numberToNumber,
+    sortSegmentsStart,
+    getItemImageUrl,
+    generateUUID,
+  };
 }

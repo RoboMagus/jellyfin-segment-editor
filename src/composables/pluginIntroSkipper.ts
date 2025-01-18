@@ -1,12 +1,11 @@
-import { useApiStore } from 'stores/api'
+import { useApiStore } from 'stores/api';
 
 export function usePluginIntroSkipper() {
-  const { fetchWithAuthJson } = useApiStore()
+  const { fetchWithAuthJson } = useApiStore();
   async function getIntroSkipperPluginMeta() {
-
-    const response = await fetchWithAuthJson('IntroSkipper')
-    return response
+    const response = await fetchWithAuthJson('IntroSkipper');
+    return response;
   }
 
-  return { getIntroSkipperPluginMeta }
+  return { getIntroSkipperPluginMeta };
 }

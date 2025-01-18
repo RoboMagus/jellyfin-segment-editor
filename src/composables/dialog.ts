@@ -1,29 +1,33 @@
-import useModalStore from "stores/modal";
-import YesNoModal from "src/components/dialog/YesNoModal.vue";
-import { useI18n } from "vue-i18n";
+import useModalStore from 'stores/modal';
+import YesNoModal from 'src/components/dialog/YesNoModal.vue';
+import { useI18n } from 'vue-i18n';
 
 export function useDialog() {
   const { t } = useI18n();
   const modal = useModalStore();
 
-  const yesNoDialog = (title: string, message: string, lcallback: (arg0: boolean) => void) => {
+  const yesNoDialog = (
+    title: string,
+    message: string,
+    lcallback: (arg0: boolean) => void,
+  ) => {
     const customDialog = YesNoModal;
     const customDialogProps = {
       title: title,
-      message: message
+      message: message,
     };
     const actions = [
       {
         label: t('yes'),
         callback: () => {
-          lcallback(true)
+          lcallback(true);
           modal.close();
         },
       },
       {
         label: t('no'),
         callback: () => {
-          lcallback(false)
+          lcallback(false);
           modal.close();
         },
       },
@@ -31,10 +35,10 @@ export function useDialog() {
 
     const dialog = {
       init: () => modal.init(customDialog, actions, customDialogProps),
-      open: () => modal.open()
-    }
+      open: () => modal.open(),
+    };
     return dialog;
-  }
+  };
 
-  return { yesNoDialog }
+  return { yesNoDialog };
 }

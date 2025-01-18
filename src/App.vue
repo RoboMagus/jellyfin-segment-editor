@@ -14,7 +14,6 @@ const { testConnection } = useApiStore();
 const { testServerPlugins } = usePluginStore();
 const { show_main_window } = useTauri();
 
-
 // apply theme
 setTheme();
 
@@ -22,12 +21,12 @@ setTheme();
 setLocale();
 
 // show main window
-show_main_window()
+show_main_window();
 
 // Test connection async
-console.log('Testing connection state')
-testConnection()
+console.log('Testing connection state');
+testConnection();
 
-console.log('Testing plugin state')
-testServerPlugins()
+console.log('Testing plugin state');
+testServerPlugins();
 </script>

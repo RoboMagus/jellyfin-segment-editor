@@ -16,7 +16,7 @@ export default function getPixels(
   hash: string,
   width: number,
   height: number,
-  punch: number
+  punch: number,
 ): Uint8ClampedArray {
   try {
     const params = [hash, width, height, punch].toString();

@@ -1,11 +1,11 @@
-import { store } from 'quasar/wrappers'
-import { createPinia } from 'pinia'
+import { store } from 'quasar/wrappers';
+import { createPinia } from 'pinia';
 import { Router } from 'vue-router';
-import { createPersistedState } from 'pinia-plugin-persistedstate'
+import { createPersistedState } from 'pinia-plugin-persistedstate';
 
 const persistedState = createPersistedState({
   auto: true,
-})
+});
 
 /*
  * When adding new properties to stores, you should also
@@ -28,10 +28,10 @@ declare module 'pinia' {
  */
 
 export default store((/* { ssrContext } */) => {
-  const pinia = createPinia()
+  const pinia = createPinia();
 
   // You can add Pinia plugins here
-  pinia.use(persistedState)
+  pinia.use(persistedState);
 
-  return pinia
-})
+  return pinia;
+});

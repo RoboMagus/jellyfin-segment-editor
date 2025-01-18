@@ -6,7 +6,11 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn color="primary" label="GetChapterData" @click="getChapterData" />
-        <q-btn color="primary" label="writeChapterData" @click="writeChapterData" />
+        <q-btn
+          color="primary"
+          label="writeChapterData"
+          @click="writeChapterData"
+        />
         <q-btn color="primary" label="OK" @click="onOKClick" />
         <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
       </q-card-actions>
@@ -15,18 +19,19 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogPluginComponent } from 'quasar'
-import { usePluginChapterApi } from 'src/composables/pluginChapterApi'
+import { useDialogPluginComponent } from 'quasar';
+import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
 import { ref } from 'vue';
 
 let chapterData = ref('');
 
 const props = defineProps<{
-  item: BaseItemDto
-}>()
+  item: BaseItemDto;
+}>();
 
-const { createChapterById, getChapterById } = usePluginChapterApi()
-const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+const { createChapterById, getChapterById } = usePluginChapterApi();
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+  useDialogPluginComponent();
 // dialogRef      - Vue ref to be applied to QDialog
 // onDialogHide   - Function to be used as handler for @hide on QDialog
 // onDialogOK     - Function to call to settle dialog with "ok" outcome
@@ -34,30 +39,27 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginC
 //                    example: onDialogOK({ /*...*/ }) - with payload
 // onDialogCancel - Function to call to settle dialog with "cancel" outcome
 
-
-
 defineEmits([
   // REQUIRED; need to specify some events that your
   // component will emit through useDialogPluginComponent()
-  ...useDialogPluginComponent.emits
-])
-
+  ...useDialogPluginComponent.emits,
+]);
 
 // this is part of our example (so not required)
 function onOKClick() {
   // on OK, it is REQUIRED to
   // call onDialogOK (with optional payload)
-  onDialogOK()
+  onDialogOK();
   // or with payload: onDialogOK({ ... })
   // ...and it will also hide the dialog automatically
 }
 
 const getChapterData = async () => {
-  chapterData.value = await getChapterById(props.item.Id)
-  console.log(chapterData.value)
-}
+  chapterData.value = await getChapterById(props.item.Id);
+  console.log(chapterData.value);
+};
 
 const writeChapterData = async () => {
-  await createChapterById([props.item.Id])
-}
+  await createChapterById([props.item.Id]);
+};
 </script>

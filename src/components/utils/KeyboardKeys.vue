@@ -1,17 +1,19 @@
 <template>
-  <div v-for="key in keyboardKeys " :key="`kkey_${key}`" class="keyboard-keys q-px-xs q-ma-xs items-center">
+  <div
+    v-for="key in keyboardKeys"
+    :key="`kkey_${key}`"
+    class="keyboard-keys q-px-xs q-ma-xs items-center"
+  >
     {{ key }}
   </div>
 </template>
 
 <script setup lang="ts">
-
 interface Props {
-  keyboardKeys: string[],
+  keyboardKeys: string[];
 }
 
-defineProps<Props>()
-
+defineProps<Props>();
 </script>
 
 <style>

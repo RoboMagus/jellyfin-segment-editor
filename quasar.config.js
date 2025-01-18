@@ -8,16 +8,16 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-import { configure } from 'quasar/wrappers'
-import path from 'path'
-import IconsResolver from 'unplugin-icons/resolver'
-import { QuasarResolver } from 'unplugin-vue-components/resolvers'
-import { load } from 'js-yaml'
+import { configure } from 'quasar/wrappers';
+import path from 'path';
+import IconsResolver from 'unplugin-icons/resolver';
+import { QuasarResolver } from 'unplugin-vue-components/resolvers';
+import { load } from 'js-yaml';
 
 // Import Vite plugins
-import vueI18n from '@intlify/unplugin-vue-i18n/vite'
-import vueComponents from 'unplugin-vue-components/vite'
-import unpluginIcons from 'unplugin-icons/vite'
+import vueI18n from '@intlify/unplugin-vue-i18n/vite';
+import vueComponents from 'unplugin-vue-components/vite';
+import unpluginIcons from 'unplugin-icons/vite';
 
 export default configure(function (/* ctx */) {
   // Define the custom YAML plugin
@@ -26,36 +26,33 @@ export default configure(function (/* ctx */) {
     transform(src, id) {
       if (id.endsWith('.yaml') || id.endsWith('.yml')) {
         try {
-          const json = load(src)
+          const json = load(src);
           if (typeof json !== 'object') {
-            return null
+            return null;
           }
           return {
             code: `export default ${JSON.stringify(json)};`,
-            map: null
-          }
+            map: null,
+          };
         } catch (e) {
-          this.error(`Failed to parse YAML file: ${id}\n${e}`)
+          this.error(`Failed to parse YAML file: ${id}\n${e}`);
         }
       }
-      return null
-    }
-  }
+      return null;
+    },
+  };
 
   // Initialize other plugins
   const i18nPlugin = vueI18n({
     runtimeOnly: false,
-  })
+  });
 
   const componentsPlugin = vueComponents({
-    resolvers: [
-      IconsResolver(),
-      QuasarResolver(),
-    ],
-    dts: path.join(__dirname, './src/globals/components.d.ts')
-  })
+    resolvers: [IconsResolver(), QuasarResolver()],
+    dts: path.join(__dirname, './src/globals/components.d.ts'),
+  });
 
-  const iconsPlugin = unpluginIcons()
+  const iconsPlugin = unpluginIcons();
 
   return {
     eslint: {
@@ -64,34 +61,26 @@ export default configure(function (/* ctx */) {
       // exclude: [],
       // rawOptions: {},
       warnings: false,
-      errors: false
+      errors: false,
     },
 
     // App boot files
-    boot: [
-      'i18n',
-      'notify-defaults'
-    ],
+    boot: ['i18n', 'notify-defaults'],
 
-    css: [
-      'app.scss'
-    ],
+    css: ['app.scss'],
 
-    extras: [
-      'roboto-font',
-      'material-icons',
-    ],
+    extras: ['roboto-font', 'material-icons'],
 
     build: {
       target: {
         browser: ['es2022', 'edge94', 'firefox93', 'chrome94', 'safari16.4'],
-        node: 'node18'
+        node: 'node18',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
       rawDefine: {
-        APP_COMMIT: JSON.stringify(process.env.COMMIT_HASH || '')
+        APP_COMMIT: JSON.stringify(process.env.COMMIT_HASH || ''),
       },
 
       alias: {
@@ -100,34 +89,34 @@ export default configure(function (/* ctx */) {
       },
 
       extendViteConf(viteConf) {
-        viteConf.plugins = viteConf.plugins || []
+        viteConf.plugins = viteConf.plugins || [];
         // Add the custom YAML plugin
-        viteConf.plugins.push(yamlPlugin)
+        viteConf.plugins.push(yamlPlugin);
         // Add other Vite plugins
-        viteConf.plugins.push(i18nPlugin)
-        viteConf.plugins.push(componentsPlugin)
-        viteConf.plugins.push(iconsPlugin)
+        viteConf.plugins.push(i18nPlugin);
+        viteConf.plugins.push(componentsPlugin);
+        viteConf.plugins.push(iconsPlugin);
       },
 
       // Remove vitePlugins since we're adding them via extendViteConf
-      vitePlugins: []
+      vitePlugins: [],
     },
 
     devServer: {
       port: 3111,
-      open: false // disables automatic browser opening
+      open: false, // disables automatic browser opening
     },
 
     framework: {
       config: {
-        dark: true
+        dark: true,
       },
 
       lang: 'en-US',
 
-      plugins: ['Dialog', 'Notify']
+      plugins: ['Dialog', 'Notify'],
     },
 
-    animations: []
-  }
-})
+    animations: [],
+  };
+});

@@ -6,47 +6,50 @@
       </div>
       <div class="col-grow">
         <div class="row items-center q-mt-sm">
-          <span>S{{ episode.ParentIndexNumber }}E{{ episode.IndexNumber
-          }}</span>
-          <span class="q-ml-xs" v-if="episode.Name && !episode.Name.includes('Episode')">- {{
-            episode.Name
-          }}
+          <span
+            >S{{ episode.ParentIndexNumber }}E{{ episode.IndexNumber }}</span
+          >
+          <span
+            class="q-ml-xs"
+            v-if="episode.Name && !episode.Name.includes('Episode')"
+            >- {{ episode.Name }}
           </span>
         </div>
 
         <SegmentsBar :item="episode"></SegmentsBar>
-
       </div>
     </div>
-
   </template>
 </template>
 
 <script setup lang="ts">
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 import { useApi } from 'src/composables/api';
-import { useItemsStore } from 'stores/items'
+import { useItemsStore } from 'stores/items';
 
-const { pushMoreItems } = useItemsStore()
+const { pushMoreItems } = useItemsStore();
 const { getEpisodes } = useApi();
 
 interface Props {
-  item: BaseItemDto
+  item: BaseItemDto;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // fetch episodes of season
-const repisodes = await getEpisodes(props.item.SeriesId as string, props.item.Id as string);
+const repisodes = await getEpisodes(
+  props.item.SeriesId as string,
+  props.item.Id as string,
+);
 const episodes: BaseItemDto[] = repisodes.Items ?? [];
 
 // push items
-pushMoreItems(episodes)
+pushMoreItems(episodes);
 </script>
 
 <style>
 .season-episode-poster {
   width: 124px;
-  height: 70px
+  height: 70px;
 }
 </style>
