@@ -1,3 +1,5 @@
+import { Api } from '@jellyfin/sdk';
+import { Jellyfin } from '@jellyfin/sdk';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -20,6 +22,28 @@ export const useApiStore = defineStore('api', () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     pluginAuthHeader = { 'MediaBrowser Token': ApiClient.accessToken() };
+  }
+
+  // Create a single Jellyfin instance
+  const jellyfin = new Jellyfin({
+    clientInfo: {
+      name: 'Jellyfin Segment Editor',
+      version: '0.4.8',
+    },
+    deviceInfo: {
+      name: 'Web Browser',
+      id: 'segment-editor-browser',
+    },
+  });
+
+  // Memoized API instance
+  let apiInstance: Api | null = null;
+
+  const toApi = (): Api => {
+    if (!apiInstance) {
+      apiInstance = jellyfin.createApi(serverAddress.value, apiKey.value);
+    }
+    return apiInstance;
   }
 
   const fetchWithAuth = async (
@@ -169,6 +193,7 @@ export const useApiStore = defineStore('api', () => {
     serverAddress,
     validConnection,
     validAuth,
+    toApi,
     fetchWithAuthJson,
     fetchWithAuth,
     testConnection,

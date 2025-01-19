@@ -8,24 +8,13 @@ import {
 import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api';
 import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api';
 import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api';
-import { Jellyfin } from '@jellyfin/sdk';
 import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client';
 
 export function useApi() {
-  const { fetchWithAuth, serverAddress, apiKey } = useApiStore();
-  const jellyfin = new Jellyfin({
-    clientInfo: {
-      name: 'Jellyfin Segment Editor',
-      version: '0.4.8',
-    },
-    deviceInfo: {
-      name: 'Web Browser',
-      id: 'segment-editor-browser',
-    },
-  });
-  const api = jellyfin.createApi(serverAddress, apiKey);
+  const { fetchWithAuth, toApi } = useApiStore();
 
   // Get the typed API client
+  const api = toApi();
   const itemsApi = getItemsApi(api);
   const libraryStructureApi = getLibraryStructureApi(api);
   const tvShowsApi = getTvShowsApi(api);

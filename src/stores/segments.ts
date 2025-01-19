@@ -20,7 +20,9 @@ export const useSegmentsStore = defineStore('segments', () => {
       (seg: MediaSegmentDto) => seg.ItemId != itemId,
     );
     // push new segments
-    localSegments.value.push(...segments.Items);
+    if (segments) {
+      localSegments.value.push(...segments);
+    }
   };
 
   /**

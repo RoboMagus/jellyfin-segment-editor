@@ -3,27 +3,32 @@ import { useAppStore } from 'stores/app';
 import {
   BaseItemDto,
   MediaSegmentDto,
+  MediaSegmentsApiGetItemSegmentsRequest,
 } from '@jellyfin/sdk/lib/generated-client';
 import { useUtils } from './utils';
+import { getMediaSegmentsApi } from '@jellyfin/sdk/lib/utils/api/media-segments-api';
 
 export function useSegmentApi() {
-  const { fetchWithAuthJson, postJson, deleteJson } = useApiStore();
+  const { postJson, deleteJson, toApi } = useApiStore();
   const { providerId } = useAppStore();
   const { secondsToTicks, ticksToMs } = useUtils();
+  const mediaSegmentsApi = getMediaSegmentsApi(toApi());
 
   // Get segments. Convert ticks to seconds
   async function getSegmentsById(itemId: BaseItemDto['Id']) {
-    const query: Map<string, string> = new Map();
-    query.set('itemId', itemId as string);
+    if (!itemId) return [];
+    const request: MediaSegmentsApiGetItemSegmentsRequest = {
+      itemId: itemId,
+    };
 
-    const items = await fetchWithAuthJson(`MediaSegments/${itemId}`, query);
+    const response = await mediaSegmentsApi.getItemSegments(request);
 
-    items.Items.forEach((seg: MediaSegmentDto) => {
+    response.data.Items?.forEach((seg: MediaSegmentDto) => {
       seg.StartTicks = ticksToMs(seg.StartTicks) / 1000;
       seg.EndTicks = ticksToMs(seg.EndTicks) / 1000;
     });
 
-    return items;
+    return response.data.Items;
   }
 
   /**
@@ -33,7 +38,11 @@ export function useSegmentApi() {
    */
   async function createSegment(segment: MediaSegmentDto) {
     const query: Map<string, string> = new Map();
-    query.set('providerId', providerId());
+    const provider = providerId();
+    if (!provider) {
+      throw new Error('Provider ID is required');
+    }
+    query.set('providerId', provider);
 
     segment.StartTicks = secondsToTicks(segment.StartTicks);
     segment.EndTicks = secondsToTicks(segment.EndTicks);

@@ -38,8 +38,8 @@ const props = defineProps<Props>();
 
 // fetch episodes of season
 const repisodes = await getEpisodes(
-  props.item.SeriesId as string,
-  props.item.Id as string,
+  props.item.SeriesId ?? '',
+  props.item.Id ?? ''
 );
 const episodes: BaseItemDto[] = repisodes.Items ?? [];
 
