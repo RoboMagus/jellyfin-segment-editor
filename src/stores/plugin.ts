@@ -65,13 +65,13 @@ export const usePluginStore = defineStore(
       try {
         const plugins = await getPlugins();
 
-        pluginChecks.forEach(({ name, installedRef, versionRef }) => {
+        for (const { name, installedRef, versionRef } of pluginChecks) {
           const plugin = plugins.find((p: PluginInfo) => p.Name === name);
           const isActive = plugin?.Status === PluginStatus.Active;
 
           installedRef.value = isActive;
           versionRef.value = isActive ? (plugin?.Version ?? '0.0.0') : '0.0.0';
-        });
+        }
       } catch (error) {
         console.error('Failed to test plugins:', error);
       }
