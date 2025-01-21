@@ -3,18 +3,20 @@ import { ref, watch } from 'vue';
 import { useApiStore } from './api';
 import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
 import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
-import { usePluginIntroSkipper } from 'src/composables/pluginIntroSkipper';
 import { usePluginMediaSegmentsApi } from 'src/composables/pluginMediaSegmentsApi';
 import { useAppStore } from './app';
+import { PluginInfo, PluginStatus } from '@jellyfin/sdk/lib/generated-client';
+import { useApi } from 'src/composables/api';
+
 
 export const usePluginStore = defineStore(
   'plugin',
   () => {
     const apiStore = useApiStore();
     const appStore = useAppStore();
+    const { getPlugins } = useApi();
     const { getChapterPluginMeta } = usePluginChapterApi();
     const { getEdlPluginMeta } = usePluginEdlApi();
-    const { getIntroSkipperPluginMeta } = usePluginIntroSkipper();
     const { getMediaSegmentsApiPluginMeta } = usePluginMediaSegmentsApi();
     const { validAuth } = storeToRefs(apiStore);
     const { enableEdl } = storeToRefs(appStore);
@@ -58,20 +60,18 @@ export const usePluginStore = defineStore(
     };
 
     const testIntroSkipper = async () => {
-      let response;
       try {
-        response = await getIntroSkipperPluginMeta();
+        const plugins = await getPlugins();
+        const introSkipper = plugins.find((plugin: PluginInfo) => plugin.Name === 'Intro Skipper');
+        const isActive = introSkipper?.Status === PluginStatus.Active;
+
+        pluginIntroSkipperInstalled.value = isActive;
+        pluginIntroSkipperVersion.value = isActive ? (introSkipper.Version ?? '0.0.0') : '0.0.0';
       } catch (error) {
-        console.error('testPluginIntroSkipper Error', error);
-        return false;
+        console.error('testIntroSkipper Error:', error);
+        pluginIntroSkipperInstalled.value = false;
+        pluginIntroSkipperVersion.value = '0.0.0';
       }
-      if (response && response.version) {
-        pluginIntroSkipperInstalled.value = true;
-        pluginIntroSkipperVersion.value = response.version;
-        return;
-      }
-      pluginIntroSkipperInstalled.value = false;
-      pluginIntroSkipperVersion.value = '0.0.0';
     };
 
     const testEdl = async () => {

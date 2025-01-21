@@ -9,6 +9,7 @@ import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api';
 import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-structure-api';
 import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api';
 import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client';
+import { getPluginsApi } from '@jellyfin/sdk/lib/utils/api/plugins-api';
 
 export function useApi() {
   const { fetchWithAuth, toApi } = useApiStore();
@@ -18,6 +19,7 @@ export function useApi() {
   const itemsApi = getItemsApi(api);
   const libraryStructureApi = getLibraryStructureApi(api);
   const tvShowsApi = getTvShowsApi(api);
+  const pluginsApi = getPluginsApi(api);
   /*
     type RequestBody = {
       userId: number
@@ -109,5 +111,10 @@ export function useApi() {
     return image;
   }
 
-  return { getItems, getEpisodes, getImage, getCollections };
+  async function getPlugins() {
+    const response = await pluginsApi.getPlugins();
+    return response.data;
+  }
+
+  return { getItems, getEpisodes, getImage, getCollections, getPlugins };
 }
