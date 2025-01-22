@@ -25,7 +25,7 @@
   </div>
   -->
   <div class="q-mt-sm">{{ t('provider.title') }}</div>
-  <q-select v-model="appStore.providerIndex" :options="providers" />
+  <q-select v-model="appStore.providerIndex" :options="providers" map-options />
 </template>
 
 <script lang="ts" setup>
