@@ -1,8 +1,7 @@
 <template>
-  <div class="row q-mb-sm">
-    <div>
+  <div class="row q-mb-sm menu-bar">
+    <div class="menu-collection">
       <q-select
-        style="width: 250px"
         :label="$t('items.filter.collection')"
         dense
         :options="itemStore.collections"
@@ -13,9 +12,8 @@
         option-value="ItemId"
       ></q-select>
     </div>
-    <div class="q-ml-sm">
+    <div class="q-ml-sm menu-search">
       <q-input
-        style="width: 250px"
         :label="$t('items.filter.name')"
         dense
         v-model="itemStore.filterName"
@@ -81,6 +79,15 @@ const navigateTo = (item: BaseItemDto) => {
 </script>
 
 <style>
+.menu-bar {
+  display: flex;
+}
+.menu-collection {
+  width: 250px;
+}
+.menu-search {
+  flex-grow: 1;
+}
 .movie-container {
   width: 133px;
   height: 224px;
