@@ -83,7 +83,7 @@ const navigateTo = (item: BaseItemDto) => {
   display: flex;
 }
 .menu-collection {
-  width: 250px;
+  width: 50vw;
 }
 .menu-search {
   flex-grow: 1;
