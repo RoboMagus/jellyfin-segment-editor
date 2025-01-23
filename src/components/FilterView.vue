@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-mb-sm menu-bar">
+  <div class="row q-mb-sm flexible-menu">
     <div class="menu-collection">
       <q-select
         :label="$t('items.filter.collection')"
@@ -21,11 +21,11 @@
       </q-input>
     </div>
   </div>
-  <div class="row items-left">
+  <div class="row items-left movie-row">
     <q-intersection
       v-for="item in itemStore.filteredItems"
       :key="item.Id"
-      class="q-mx-auto q-mb-xs movie-container cursor-pointer relative-position"
+      class="q-ma-sm movie-container cursor-pointer relative-position"
       @click="navigateTo(item)"
     >
       <ItemImage :width="133" :height="200" :item="item"> </ItemImage>
@@ -79,7 +79,7 @@ const navigateTo = (item: BaseItemDto) => {
 </script>
 
 <style>
-.menu-bar {
+.flexible-menu {
   display: flex;
 }
 .menu-collection {
@@ -87,6 +87,9 @@ const navigateTo = (item: BaseItemDto) => {
 }
 .menu-search {
   flex-grow: 1;
+}
+.movie-row {
+  justify-content: center;
 }
 .movie-container {
   width: 133px;
