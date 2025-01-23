@@ -1,53 +1,55 @@
 <template>
-  <div class="row q-mb-sm flexible-menu">
-    <div class="menu-collection">
-      <q-select
-        :label="$t('items.filter.collection')"
-        dense
-        :options="itemStore.collections"
-        v-model="itemStore.selectedCol"
-        emit-value
-        map-options
-        option-label="Name"
-        option-value="ItemId"
-      ></q-select>
-    </div>
-    <div class="q-ml-sm menu-search">
-      <q-input
-        :label="$t('items.filter.name')"
-        dense
-        v-model="itemStore.filterName"
-      >
-      </q-input>
-    </div>
-  </div>
-  <div class="row items-left movie-row">
-    <q-intersection
-      v-for="item in itemStore.filteredItems"
-      :key="item.Id"
-      class="q-mx-auto movie-container cursor-pointer relative-position"
-      @click="navigateTo(item)"
-    >
-      <ItemImage :width="133" :height="200" :item="item"> </ItemImage>
-      <div class="text-ellipsis text-center absolute movie-container-subtext">
-        {{ item.Name }}
+  <div class="filter-container">
+    <div class="filter-controls row q-mb-sm">
+      <div class="menu-collection">
+        <q-select
+          :label="$t('items.filter.collection')"
+          dense
+          :options="itemStore.collections"
+          v-model="itemStore.selectedCol"
+          emit-value
+          map-options
+          option-label="Name"
+          option-value="ItemId"
+        ></q-select>
       </div>
+      <div class="q-ml-sm menu-search">
+        <q-input
+          :label="$t('items.filter.name')"
+          dense
+          v-model="itemStore.filterName"
+        >
+        </q-input>
+      </div>
+    </div>
+    <div class="grid-container">
+        <q-intersection
+          v-for="item in itemStore.filteredItems"
+          :key="item.Id"
+          class="movie-container cursor-pointer relative-position"
+          @click="navigateTo(item)"
+        >
+          <ItemImage :width="133" :height="200" :item="item" />
+          <div class="text-ellipsis text-center absolute movie-container-subtext">
+            {{ item.Name }}
+          </div>
+        </q-intersection>
+      </div>
+    <q-page-scroller
+      position="bottom-right"
+      :scroll-offset="150"
+      :offset="[18, 18]"
+    >
+      <q-btn fab color="accent">
+        <i-mdi-keyboard-arrow-up></i-mdi-keyboard-arrow-up>
+      </q-btn>
+    </q-page-scroller>
+    <!--
+    <q-intersection class="full-width row items-center justify-center" style="height:50px" @visibility="loadData">
+      <div>Loading data!</div>
     </q-intersection>
+    -->
   </div>
-  <q-page-scroller
-    position="bottom-right"
-    :scroll-offset="150"
-    :offset="[18, 18]"
-  >
-    <q-btn fab color="accent">
-      <i-mdi-keyboard-arrow-up></i-mdi-keyboard-arrow-up>
-    </q-btn>
-  </q-page-scroller>
-  <!--
-  <q-intersection class="full-width row items-center justify-center" style="height:50px" @visibility="loadData">
-    <div>Loading data!</div>
-  </q-intersection>
-  -->
 </template>
 
 <script lang="ts" setup>
@@ -78,7 +80,14 @@ const navigateTo = (item: BaseItemDto) => {
 };
 </script>
 
-<style>
+<style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  justify-items: center;
+  transition: all 0.3s ease;
+}
 .flexible-menu {
   display: flex;
 }
