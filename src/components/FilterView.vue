@@ -27,7 +27,7 @@
     <q-intersection
       v-for="item in itemStore.filteredItems"
       :key="item.Id"
-      class="q-ma-sm movie-container cursor-pointer relative-position"
+      class="movie-container cursor-pointer relative-position"
       @click="navigateTo(item)"
     >
       <ItemImage :width="133" :height="200" :item="item"> </ItemImage>
@@ -84,6 +84,7 @@ const navigateTo = (item: BaseItemDto) => {
 .movie-container {
   width: 133px;
   height: 224px;
+  margin: 2px 6px;
 }
 
 .movie-container-subtext {
