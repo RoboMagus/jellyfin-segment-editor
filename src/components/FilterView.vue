@@ -83,7 +83,7 @@ const navigateTo = (item: BaseItemDto) => {
 <style scoped>
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(133px, 1fr));
   gap: 8px;
   justify-items: center;
   transition: all 0.3s ease;
