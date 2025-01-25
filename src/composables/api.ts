@@ -10,9 +10,11 @@ import { getLibraryStructureApi } from '@jellyfin/sdk/lib/utils/api/library-stru
 import { getTvShowsApi } from '@jellyfin/sdk/lib/utils/api/tv-shows-api';
 import { ItemFields, ItemSortBy } from '@jellyfin/sdk/lib/generated-client';
 import { getPluginsApi } from '@jellyfin/sdk/lib/utils/api/plugins-api';
+import { ImageUrlsApi } from '@jellyfin/sdk/lib/utils/api/image-urls-api';
+import { ImageRequestParameters } from '@jellyfin/sdk/lib/models/api/image-request-parameters';
 
 export function useApi() {
-  const { fetchWithAuth, toApi } = useApiStore();
+  const { toApi } = useApiStore();
 
   // Get the typed API client
   const api = toApi();
@@ -20,6 +22,7 @@ export function useApi() {
   const libraryStructureApi = getLibraryStructureApi(api);
   const tvShowsApi = getTvShowsApi(api);
   const pluginsApi = getPluginsApi(api);
+  const imageUrlsApi = new ImageUrlsApi(api.configuration);
   /*
     type RequestBody = {
       userId: number
@@ -94,27 +97,20 @@ export function useApi() {
     return episodes.data;
   }
 
-  // Get Image for item
-  async function getImage(
-    itemId: string,
-    width = 133,
-    height = 200,
-    type: ImageType = ImageType.Primary,
-  ) {
-    const query: Map<string, any> = new Map();
-
-    query.set('tag', `segmenteditor_${itemId}_${type}`);
-    query.set('width', width);
-    query.set('height', height);
-
-    const image = await fetchWithAuth(`Items/${itemId}/Images/${type}`);
-    return image;
-  }
-
   async function getPlugins() {
     const response = await pluginsApi.getPlugins();
     return response.data;
   }
 
-  return { getItems, getEpisodes, getImage, getCollections, getPlugins };
+  function getImageUrl(itemId: string, width = 133, height = 200, type: ImageType = ImageType.Primary) {
+    const params: ImageRequestParameters = {
+      width: width,
+      height: height,
+      tag: `segmenteditor_${itemId}_${type}`,
+    };
+    const response = imageUrlsApi.getItemImageUrlById(itemId, type, params);
+    return response;
+  }
+
+  return { getItems, getEpisodes, getCollections, getPlugins, getImageUrl };
 }

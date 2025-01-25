@@ -31,11 +31,9 @@ interface Props {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useApi } from 'src/composables/api';
-import { useUtils } from 'src/composables/utils';
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client';
 
-const { getImage } = useApi();
-const { getImageOfStream } = useUtils();
+const { getImageUrl } = useApi();
 
 const isLoaded = ref(false);
 const image = ref<HTMLImageElement | undefined>(undefined);
@@ -46,13 +44,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const onIntersect = () => {
-  getImage(props.item.Id as string, props.width, props.height)
-    .then((response) => getImageOfStream(response))
-    .then((url) => {
-      if (image.value) {
-        image.value.src = url;
-      }
-    });
+  const url = getImageUrl(props.item.Id ?? '');
+  if (image.value) {
+    image.value.src = url;
+  }
   if (image.value) {
     image.value.onload = () => {
       isLoaded.value = true;

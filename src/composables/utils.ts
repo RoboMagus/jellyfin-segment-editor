@@ -6,7 +6,7 @@ import {
 import { useApi } from 'src/composables/api';
 
 export function useUtils() {
-  const { getImage } = useApi();
+  const { getImageUrl } = useApi();
 
   /**
    * Get image url from item
@@ -68,37 +68,7 @@ export function useUtils() {
         : undefined;
   }*/
 
-    const res = await getImage(itemId, width, height, imgType);
-    const url = await getImageOfStream(res);
-    return url;
-  }
-
-  // Get image of a Request body stream
-  async function getImageOfStream(response: Response) {
-    const reader = response?.body?.getReader();
-    const readableStream = new ReadableStream({
-      start(controller) {
-        return pump();
-        function pump() {
-          return reader?.read().then(({ done, value }) => {
-            // When no more data needs to be consumed, close the stream
-            if (done) {
-              controller.close();
-              return;
-            }
-            // Enqueue the next data chunk into our target stream
-            controller.enqueue(value);
-            return pump();
-          });
-        }
-      },
-    });
-
-    // Create a new response out of the stream
-    const newres = new Response(readableStream);
-    // Create an object URL for the response
-    const blob = await newres.blob();
-    return URL.createObjectURL(blob);
+    return getImageUrl(itemId, width, height, imgType);
   }
 
   function getColorByType(type: MediaSegmentDto['Type']) {
@@ -296,7 +266,6 @@ export function useUtils() {
   }
 
   return {
-    getImageOfStream,
     getColorByType,
     getReadableTimeFromSeconds,
     getTimefromSeconds,
