@@ -1,9 +1,9 @@
 {
   "name": "jellyfin-segment-editor",
-  "version": "0.4.9",
+  "version": "0.5.0",
   "description": "Manage Jellyfin Media Segments",
   "productName": "Jellyfin Segment Editor",
-  "author": "endrl <119058008+endrl@users.noreply.github.com>",
+  "author": "endrl, Intro-Skipper contributors <intro-skipper.org>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
