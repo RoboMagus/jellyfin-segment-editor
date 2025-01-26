@@ -92,10 +92,11 @@ const navigateTo = (item: BaseItemDto) => {
   display: flex;
 }
 .menu-collection {
-  width: 50vw;
+  width: 48vw;
 }
 .menu-search {
   flex-grow: 1;
+  margin-right: 5px;
 }
 .movie-row {
   justify-content: center;
