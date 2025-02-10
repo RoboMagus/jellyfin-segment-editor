@@ -1,10 +1,11 @@
 <template>
-  <div class="text-h6">App</div>
+  <div class="text-h6">App (v0.5.0)</div>
 
   <div class="q-mt-sm">
     <div>{{ t('app.theme.title') }}</div>
     <q-option-group v-model="appStore.themeIndex" :options="themeList" inline />
   </div>
+
   <div class="q-mt-sm">{{ t('app.locale.title') }}</div>
   <q-select
     v-model="appStore.selectedLang"
@@ -18,14 +19,16 @@
     :label="t('app.showVideoPlayer')"
     v-model="appStore.showVideoPlayer"
   />
+
+  <div class="q-mt-sm">{{ t('provider.title') }}</div>
+  <q-select v-model="appStore.providerIndex" :options="providers" map-options />
+
   <!--
   <div class="q-mt-sm">{{ $t('app.service') }}</div>
   <div class="q-gutter-md q-ma-none">
     <q-btn color="red" :label="$t('app.service.deleteAppdata')" @click="clear" />
   </div>
   -->
-  <div class="q-mt-sm">{{ t('provider.title') }}</div>
-  <q-select v-model="appStore.providerIndex" :options="providers" map-options />
 </template>
 
 <script lang="ts" setup>
