@@ -21,7 +21,13 @@
   />
 
   <div class="q-mt-sm">{{ t('provider.title') }}</div>
-  <q-select v-model="appStore.providerIndex" :options="providers" />
+  <q-select
+    v-model="selectedProviderIndex"
+    :options="providers"
+    emit-value
+    map-options
+    option-value="value"
+  />
 
   <!--
   <div class="q-mt-sm">{{ t('app.service') }}</div>
@@ -53,9 +59,20 @@ const themeList = computed(() => {
 });
 const providers = computed(() => {
   locale.value;
-  return ['default', 'skipper', 'chapter'].map((pr, idx) => {
-    return { label: t(`provider.${pr}`), value: idx };
-  });
+  return ['default', 'skipper', 'chapter'].map((pr, idx) => ({
+    label: t(`provider.${pr}`),
+    value: idx,
+  }));
+});
+const selectedProviderIndex = computed({
+  get: () => appStore.providerIndex,
+  set: (val: number | { value: number }) => {
+    if (typeof val === 'object' && val !== null && 'value' in val) {
+      appStore.providerIndex = val.value;
+    } else {
+      appStore.providerIndex = val as number;
+    }
+  },
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

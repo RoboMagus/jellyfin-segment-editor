@@ -2,12 +2,14 @@ import { Api } from '@jellyfin/sdk';
 import { Jellyfin } from '@jellyfin/sdk';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useAppStore } from './app';
 
 export const useApiStore = defineStore('api', () => {
   const apiKey = ref(undefined);
   const serverAddress = ref('http://localhost:8096');
   const validConnection = ref(false);
   const validAuth = ref(false);
+  const appStore = useAppStore();
 
   let pluginAuthHeader: HeadersInit | undefined = undefined;
 
@@ -89,7 +91,7 @@ export const useApiStore = defineStore('api', () => {
     query?: Map<string, string>,
   ) => {
     let headers: HeadersInit = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
     if (body) {
       body = JSON.stringify(body);
@@ -98,6 +100,8 @@ export const useApiStore = defineStore('api', () => {
     if (pluginAuthHeader) {
       headers = Object.assign(headers, pluginAuthHeader);
     }
+
+    appStore.notify({ type: 'positive', message: 'Sending POST request to ' + endpoint });
 
     const reqInit: RequestInit = {
       method: 'POST',
@@ -113,14 +117,30 @@ export const useApiStore = defineStore('api', () => {
 
     // filter for broken request
     if (response.status == 400) {
-      console.error('post response', response);
-      return;
+      appStore.notify({ type: 'negative', message: 'Bad Request' });
+      return false;
+    }
+
+    if (response.status === 404) {
+      let customMessage = "Resource not found";
+      try {
+        const jsonData = await response.json();
+        if (jsonData && jsonData.message && jsonData.message.trim() !== "") {
+          customMessage = jsonData.message;
+        }
+      } catch (error) {
+        console.error("Failed to parse JSON from a 404 response", error);
+      }
+      appStore.notify({ type: 'negative', message: customMessage });
+      return false;
     }
 
     let jsonData;
     try {
       jsonData = await response.json();
-    } catch (error) {}
+    } catch (error) {
+      appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 400 response' });
+    }
     return jsonData;
   };
 
@@ -180,7 +200,7 @@ export const useApiStore = defineStore('api', () => {
       return [];
     }
     // plugin endpoint tests
-    if (response.status == 404) {
+    if (response.status === 404) {
       return false;
     }
 

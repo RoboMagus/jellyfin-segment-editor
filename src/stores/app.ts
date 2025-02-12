@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useQuasar, Notify } from 'quasar';
 import { useLocales } from 'src/composables/locales';
 
@@ -15,19 +15,22 @@ export const useAppStore = defineStore('app', () => {
   const enableEdl = ref(true);
   const enableChapter = ref(true);
 
-  const providerId = () => {
+  const providerId = computed(() => {
+    let providerName;
+    notify({ type: 'positive', message: 'Provider Index is ' + providerIndex.value });
     switch (providerIndex.value) {
       case 0:
         return 'MediaSegments API';
       case 1:
         return 'Intro Skipper';
       case 2:
-        return 'Chapter Segments Provider';
+        providerName = 'Chapter Segments Provider';
+        break;
+      default:
+        providerName = 'Intro Skipper';
     }
-  };
-
-  // watch user provider changes
-  watch(providerIndex, providerId);
+    return providerName;
+  });
 
   const setTheme = () => {
     if (!themeIndex.value) {

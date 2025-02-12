@@ -10,7 +10,7 @@ import { getMediaSegmentsApi } from '@jellyfin/sdk/lib/utils/api/media-segments-
 
 export function useSegmentApi() {
   const { postJson, deleteJson, toApi } = useApiStore();
-  const { providerId } = useAppStore();
+  const appStore = useAppStore();
   const { secondsToTicks, ticksToMs } = useUtils();
   const mediaSegmentsApi = getMediaSegmentsApi(toApi());
 
@@ -38,9 +38,10 @@ export function useSegmentApi() {
    */
   async function createSegment(segment: MediaSegmentDto) {
     const query: Map<string, string> = new Map();
-    const provider = providerId();
+    const provider = appStore.providerId;
     if (provider === undefined) {
-      throw new Error('Provider ID is required');
+      appStore.notify({ type: 'negative', message: 'Provider ID is required' });
+      return false;
     }
     query.set('providerId', provider);
 
