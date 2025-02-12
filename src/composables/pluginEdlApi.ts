@@ -15,10 +15,5 @@ export function usePluginEdlApi() {
     return response;
   }
 
-  async function getEdlPluginMeta() {
-    const response = await fetchWithAuthJson('PluginEdl');
-    return response;
-  }
-
-  return { getEdlById, createEdlById, getEdlPluginMeta };
+  return { getEdlById, createEdlById };
 }

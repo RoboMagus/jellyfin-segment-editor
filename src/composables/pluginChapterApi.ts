@@ -15,10 +15,5 @@ export function usePluginChapterApi() {
     return response;
   }
 
-  async function getChapterPluginMeta() {
-    const response = await fetchWithAuthJson('PluginChapter');
-    return response;
-  }
-
-  return { getChapterById, createChapterById, getChapterPluginMeta };
+  return { getChapterById, createChapterById };
 }

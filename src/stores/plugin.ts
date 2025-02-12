@@ -1,21 +1,17 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import { useApiStore } from './api';
-import { usePluginEdlApi } from 'src/composables/pluginEdlApi';
-import { usePluginChapterApi } from 'src/composables/pluginChapterApi';
-import { usePluginIntroSkipper } from 'src/composables/pluginIntroSkipper';
-import { usePluginMediaSegmentsApi } from 'src/composables/pluginMediaSegmentsApi';
 import { useAppStore } from './app';
+import { PluginInfo, PluginStatus } from '@jellyfin/sdk/lib/generated-client';
+import { useApi } from 'src/composables/api';
+
 
 export const usePluginStore = defineStore(
   'plugin',
   () => {
     const apiStore = useApiStore();
     const appStore = useAppStore();
-    const { getChapterPluginMeta } = usePluginChapterApi();
-    const { getEdlPluginMeta } = usePluginEdlApi();
-    const { getIntroSkipperPluginMeta } = usePluginIntroSkipper();
-    const { getMediaSegmentsApiPluginMeta } = usePluginMediaSegmentsApi();
+    const { getPlugins } = useApi();
     const { validAuth } = storeToRefs(apiStore);
     const { enableEdl } = storeToRefs(appStore);
     const { enableChapter } = storeToRefs(appStore);
@@ -32,80 +28,53 @@ export const usePluginStore = defineStore(
     const pluginChapterInstalled = ref(false);
     const pluginChapterVersion = ref('0.0.0');
 
-    // Test for installed server Plugins
+    interface PluginCheck {
+      name: string;
+      installedRef: Ref<boolean>;
+      versionRef: Ref<string>;
+    }
+
     const testServerPlugins = async () => {
-      testMediaSegmentsApi();
-      testIntroSkipper();
-      testEdl();
-      testChapter();
+      testPlugins();
     };
 
-    const testMediaSegmentsApi = async () => {
-      let response;
-      try {
-        response = await getMediaSegmentsApiPluginMeta();
-      } catch (error) {
-        console.error('testPluginSegmentsApi Error', error);
-        return false;
-      }
-      if (response && response.version) {
-        pluginSegmentsApiInstalled.value = true;
-        pluginSegmentsApiVersion.value = response.version;
-        return;
-      }
-      pluginSegmentsApiInstalled.value = false;
-      pluginSegmentsApiVersion.value = '0.0.0';
-    };
+    const testPlugins = async () => {
+      const pluginChecks: PluginCheck[] = [
+        {
+          name: 'MediaSegments API',
+          installedRef: pluginSegmentsApiInstalled,
+          versionRef: pluginSegmentsApiVersion
+        },
+        {
+          name: 'EDL Creator',
+          installedRef: pluginEdlInstalled,
+          versionRef: pluginEdlVersion
+        },
+        {
+          name: 'Chapter Creator',
+          installedRef: pluginChapterInstalled,
+          versionRef: pluginChapterVersion
+        },
+        {
+          name: 'Intro Skipper',
+          installedRef: pluginIntroSkipperInstalled,
+          versionRef: pluginIntroSkipperVersion
+        }
+      ];
 
-    const testIntroSkipper = async () => {
-      let response;
       try {
-        response = await getIntroSkipperPluginMeta();
-      } catch (error) {
-        console.error('testPluginIntroSkipper Error', error);
-        return false;
-      }
-      if (response && response.version) {
-        pluginIntroSkipperInstalled.value = true;
-        pluginIntroSkipperVersion.value = response.version;
-        return;
-      }
-      pluginIntroSkipperInstalled.value = false;
-      pluginIntroSkipperVersion.value = '0.0.0';
-    };
+        const plugins = await getPlugins();
 
-    const testEdl = async () => {
-      let response;
-      try {
-        response = await getEdlPluginMeta();
-      } catch (error) {
-        console.error('testEdl Error', error);
-        return false;
-      }
-      if (response && response.version) {
-        pluginEdlInstalled.value = true;
-        pluginEdlVersion.value = response.version;
-        return;
-      }
-      pluginEdlInstalled.value = false;
-      pluginEdlVersion.value = '0.0.0';
-    };
+        for (const { name, installedRef, versionRef } of pluginChecks) {
+          const plugin = plugins.find((p: PluginInfo) => p.Name === name);
+          const isActive = plugin?.Status === PluginStatus.Active;
 
-    const testChapter = async () => {
-      let response;
-      try {
-        response = await getChapterPluginMeta();
+          installedRef.value = isActive;
+          versionRef.value = isActive ? (plugin?.Version ?? '0.0.0') : '0.0.0';
+        }
       } catch (error) {
-        console.error('testChapter Error', error);
-        return false;
+        console.error('Failed to test plugins:', error);
       }
-      if (response && response.version) {
-        pluginChapterInstalled.value = true;
-        pluginChapterVersion.value = response.version;
-        return;
-      }
-      pluginChapterInstalled.value = false;
-      pluginChapterVersion.value = '0.0.0';
     };
 
     // check if we should show edl handling
