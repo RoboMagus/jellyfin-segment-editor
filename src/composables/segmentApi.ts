@@ -39,7 +39,7 @@ export function useSegmentApi() {
   async function createSegment(segment: MediaSegmentDto) {
     const query: Map<string, string> = new Map();
     const provider = providerId();
-    if (!provider) {
+    if (provider === undefined) {
       throw new Error('Provider ID is required');
     }
     query.set('providerId', provider);
