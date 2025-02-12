@@ -1,7 +1,7 @@
 // Utilities
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { useQuasar } from 'quasar';
+import { useQuasar, Notify } from 'quasar';
 import { useLocales } from 'src/composables/locales';
 
 export const useAppStore = defineStore('app', () => {
@@ -53,6 +53,15 @@ export const useAppStore = defineStore('app', () => {
   // watch user lang changes
   watch(selectedLocale, setLocale);
 
+  const notify = (options: { type: string; message: string }) => {
+    Notify.create({
+      type: options.type, // e.g., 'positive', 'negative', 'info', 'warning'
+      message: options.message,
+      timeout: 3000, // Duration in milliseconds
+      position: 'top-right', // Position of the notification
+    });
+  };
+
   return {
     selectedLang: selectedLocale,
     themeIndex,
@@ -64,5 +73,6 @@ export const useAppStore = defineStore('app', () => {
     setTheme,
     setLocale,
     SUPPORTED_LOCALES,
+    notify,
   };
 });

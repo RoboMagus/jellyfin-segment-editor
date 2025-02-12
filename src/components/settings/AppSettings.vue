@@ -24,9 +24,9 @@
   <q-select v-model="appStore.providerIndex" :options="providers" map-options />
 
   <!--
-  <div class="q-mt-sm">{{ $t('app.service') }}</div>
+  <div class="q-mt-sm">{{ t('app.service') }}</div>
   <div class="q-gutter-md q-ma-none">
-    <q-btn color="red" :label="$t('app.service.deleteAppdata')" @click="clear" />
+    <q-btn color="red" :label="t('app.service.deleteAppdata')" @click="clear" />
   </div>
   -->
 </template>
@@ -37,23 +37,26 @@ import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
 const appStore = useAppStore();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
-const langList = computed(() =>
-  appStore.SUPPORTED_LOCALES.map((l) => {
+const langList = computed(() => {
+  locale.value;
+  return appStore.SUPPORTED_LOCALES.map((l) => {
     return { label: t(`app.locale.${l}`), value: l };
-  }),
-);
-const themeList = computed(() =>
-  ['system', 'dark', 'light'].map((th, idx) => {
+  });
+});
+const themeList = computed(() => {
+  locale.value;
+  return ['system', 'dark', 'light'].map((th, idx) => {
     return { label: t(`app.theme.${th}`), value: idx };
-  }),
-);
-const providers = computed(() =>
-  ['default', 'skipper', 'chapter'].map((pr, idx) => {
+  });
+});
+const providers = computed(() => {
+  locale.value;
+  return ['default', 'skipper', 'chapter'].map((pr, idx) => {
     return { label: t(`provider.${pr}`), value: idx };
-  }),
-);
+  });
+});
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clear = () => {

@@ -35,10 +35,6 @@ export const usePluginStore = defineStore(
     }
 
     const testServerPlugins = async () => {
-      testPlugins();
-    };
-
-    const testPlugins = async () => {
       const pluginChecks: PluginCheck[] = [
         {
           name: 'MediaSegments API',
@@ -74,6 +70,7 @@ export const usePluginStore = defineStore(
         }
       } catch (error) {
         console.error('Failed to test plugins:', error);
+        appStore.notify({ type: 'negative', message: 'Failed to test plugins: ' + error });
       }
     };
 
@@ -107,10 +104,5 @@ export const usePluginStore = defineStore(
       showChapterBtn,
       testServerPlugins,
     };
-  },
-  {
-    persist: {
-      storage: sessionStorage,
-    },
   },
 );
