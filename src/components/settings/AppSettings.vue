@@ -1,5 +1,5 @@
 <template>
-  <div class="text-h6">App (v0.5.0)</div>
+  <div class="text-h6">App (v{{appStore.versionNumber}})</div>
 
   <div class="q-mt-sm">
     <div>{{ t('app.theme.title') }}</div>

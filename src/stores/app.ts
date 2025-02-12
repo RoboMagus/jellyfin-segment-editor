@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { ref, watch, computed } from 'vue';
 import { useQuasar, Notify } from 'quasar';
 import { useLocales } from 'src/composables/locales';
+import { version } from '../../package.json';
 
 export const useAppStore = defineStore('app', () => {
   const $q = useQuasar();
@@ -58,6 +59,8 @@ export const useAppStore = defineStore('app', () => {
     });
   };
 
+  const versionNumber = version;
+
   return {
     selectedLang: selectedLocale,
     themeIndex,
@@ -70,5 +73,6 @@ export const useAppStore = defineStore('app', () => {
     setLocale,
     SUPPORTED_LOCALES,
     notify,
+    versionNumber,
   };
 });
