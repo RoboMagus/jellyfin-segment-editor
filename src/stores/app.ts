@@ -10,26 +10,20 @@ export const useAppStore = defineStore('app', () => {
 
   const selectedLocale = ref('auto');
   const themeIndex = ref(1);
+  const providerIndex = ref(1);
   const showVideoPlayer = ref(true);
   const enableEdl = ref(true);
   const enableChapter = ref(true);
 
-  const providerIndex = ref(1);
-
   const providerId = () => {
-    let providerName;
     switch (providerIndex.value) {
       case 0:
-        providerName = 'MediaSegments API';
-        break;
+        return 'MediaSegments API';
       case 1:
-        providerName = 'Intro Skipper';
-        break;
+        return 'Intro Skipper';
       case 2:
-        providerName = 'Chapter Segments Provider';
-        break;
+        return 'Chapter Segments Provider';
     }
-    return providerName;
   };
 
   // watch user provider changes
@@ -66,9 +60,9 @@ export const useAppStore = defineStore('app', () => {
     selectedLang: selectedLocale,
     themeIndex,
     showVideoPlayer,
+    providerIndex,
     enableEdl,
     enableChapter,
-    providerIndex,
     providerId,
     setTheme,
     setLocale,

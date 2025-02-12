@@ -21,7 +21,7 @@
   />
 
   <div class="q-mt-sm">{{ t('provider.title') }}</div>
-  <q-select v-model="appStore.providerIndex" :options="providers" map-options />
+  <q-select v-model="appStore.providerIndex" :options="providers" />
 
   <!--
   <div class="q-mt-sm">{{ t('app.service') }}</div>
