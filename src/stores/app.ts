@@ -32,6 +32,9 @@ export const useAppStore = defineStore('app', () => {
     return providerName;
   };
 
+  // watch user provider changes
+  watch(providerIndex, providerId);
+
   const setTheme = () => {
     if (!themeIndex.value) {
       $q.dark.set('auto');
