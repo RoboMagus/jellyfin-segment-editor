@@ -101,8 +101,6 @@ export const useApiStore = defineStore('api', () => {
       headers = Object.assign(headers, pluginAuthHeader);
     }
 
-    appStore.notify({ type: 'positive', message: 'Sending POST request to ' + endpoint });
-
     const reqInit: RequestInit = {
       method: 'POST',
       headers: headers,
@@ -139,8 +137,9 @@ export const useApiStore = defineStore('api', () => {
     try {
       jsonData = await response.json();
     } catch (error) {
-      appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 400 response' });
+      appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 200 response' });
     }
+    appStore.notify({ type: 'positive', message: 'Segment created successfully' });
     return jsonData;
   };
 

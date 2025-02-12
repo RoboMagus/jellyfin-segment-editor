@@ -17,7 +17,6 @@ export const useAppStore = defineStore('app', () => {
 
   const providerId = computed(() => {
     let providerName;
-    notify({ type: 'positive', message: 'Provider Index is ' + providerIndex.value });
     switch (providerIndex.value) {
       case 0:
         return 'MediaSegments API';
