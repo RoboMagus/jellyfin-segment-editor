@@ -5,9 +5,11 @@ import {
 } from '@jellyfin/sdk/lib/generated-client';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useAppStore } from './app';
 
 export const useSegmentsStore = defineStore('segments', () => {
   const sapi = useSegmentApi();
+  const appStore = useAppStore();
   const localSegments = ref<Array<MediaSegmentDto>>([]);
 
   /**
@@ -30,13 +32,15 @@ export const useSegmentsStore = defineStore('segments', () => {
    * @param segment MediaSegment to save
    */
   const saveSegment = async (segment: MediaSegmentDto) => {
-    // update local and server
-    localSegments.value.push(segment);
-    // stringify and parse (seconds to ticks creates reactivity)
     const offseg = JSON.parse(JSON.stringify(segment));
-    // remove id
-    //offseg.Id = undefined;
-    sapi.createSegment(offseg);
+    const result = await sapi.createSegment(offseg);
+    if (result) {
+      // API call was successful, add the segment to the UI.
+      localSegments.value.push(segment);
+    } else {
+      // Notify the user about the failure.
+      appStore.notify({ message: 'Segment creation failed', type: 'negative' });
+    }
 
     // FIXME: Returned elements have 0000000000000 as Id. When you fetch it's correct. EF Core doesn't seem to return the id after save?!
     // Solution: When a segment is created we generate a new uuid, the database accepts them as long they are unique
