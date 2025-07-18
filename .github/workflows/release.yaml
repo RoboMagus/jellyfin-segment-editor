@@ -180,7 +180,12 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Build Image
-        run: |
-          docker build . --tag ghcr.io/intro-skipper/jellyfin-se:latest
-          docker push ghcr.io/intro-skipper/jellyfin-se:latest
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/intro-skipper/jellyfin-se:latest
+          push: true
