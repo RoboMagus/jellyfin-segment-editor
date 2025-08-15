@@ -16,9 +16,6 @@ export const usePluginStore = defineStore(
     const { enableEdl } = storeToRefs(appStore);
     const { enableChapter } = storeToRefs(appStore);
 
-    const pluginSegmentsApiInstalled = ref(false);
-    const pluginSegmentsApiVersion = ref('0.0.0');
-
     const pluginIntroSkipperInstalled = ref(false);
     const pluginIntroSkipperVersion = ref('0.0.0');
 
@@ -36,11 +33,6 @@ export const usePluginStore = defineStore(
 
     const testServerPlugins = async () => {
       const pluginChecks: PluginCheck[] = [
-        {
-          name: 'MediaSegments API',
-          installedRef: pluginSegmentsApiInstalled,
-          versionRef: pluginSegmentsApiVersion
-        },
         {
           name: 'EDL Creator',
           installedRef: pluginEdlInstalled,
@@ -92,8 +84,6 @@ export const usePluginStore = defineStore(
     });
 
     return {
-      pluginSegmentsApiInstalled,
-      pluginSegmentsApiVersion,
       pluginIntroSkipperInstalled,
       pluginIntroSkipperVersion,
       pluginEdlInstalled,

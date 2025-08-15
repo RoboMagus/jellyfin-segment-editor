@@ -20,24 +20,6 @@
         ><q-icon><i-mdi-reload /></q-icon
       ></q-btn>
     </div>
-
-    <div class="q-ma-sm">
-      <a
-        href="https://github.com/intro-skipper/jellyfin-plugin-ms-api?tab=readme-ov-file#jellyfin-plugin-mediasegments-api"
-        target="_blank"
-      >
-        <q-badge
-          :color="pluginStore.pluginSegmentsApiInstalled ? 'green' : 'red'"
-          rounded
-          class="q-mr-sm"
-        />MediaSegments API
-        {{
-          pluginStore.pluginSegmentsApiInstalled
-            ? `(${pluginStore.pluginSegmentsApiVersion})`
-            : ''
-        }}
-      </a>
-    </div>
     <div class="q-ma-sm">
       <a
         href="https://github.com/intro-skipper/intro-skipper?tab=readme-ov-file#intro-skipper"
