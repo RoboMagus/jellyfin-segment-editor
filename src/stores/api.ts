@@ -64,7 +64,7 @@ export const useApiStore = defineStore('api', () => {
   /**
    * Builds a final url from endpoint and query with server address and auth
    * @param endpoint endpoint to reach
-   * @param query optoinal query
+   * @param query optional query
    * @returns new url
    */
   const buildUrl = (
