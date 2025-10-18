@@ -144,21 +144,31 @@ export const useApiStore = defineStore('api', () => {
   };
 
   /**
-   * Send delete message to server
-   * @param body the body to post
+   * Send delete message to server. Accepts an object body (e.g. { ItemId, Type })
+   * @param endpoint endpoint to call
+   * @param body optional object to include as JSON body
+   * @param query optional query
    */
   const deleteJson = async (
     endpoint: string,
-    body?: string,
+    body?: any,
     query?: Map<string, string>,
   ) => {
-    if (body != undefined) {
+    let headers: HeadersInit = {};
+    // If we have a body, ensure content-type
+    if (body !== undefined) {
       body = JSON.stringify(body);
+      headers['Content-Type'] = 'application/json';
     }
+
+    if (pluginAuthHeader) {
+      headers = Object.assign(headers, pluginAuthHeader);
+    }
+
     const reqInit: RequestInit = {
       method: 'DELETE',
       body: body,
-      headers: pluginAuthHeader,
+      headers: headers,
     };
     const response = await fetch(buildUrl(endpoint, query), reqInit);
 
@@ -168,6 +178,18 @@ export const useApiStore = defineStore('api', () => {
     }
 
     validConnection.value = response.ok;
+
+    // Try to parse JSON if present
+    try {
+      const text = await response.text();
+      if (text && text.length > 0) {
+        return JSON.parse(text);
+      }
+    } catch (error) {
+      // ignore parse errors
+    }
+
+    return response.ok;
   };
 
   // Test if connection and auth is valid

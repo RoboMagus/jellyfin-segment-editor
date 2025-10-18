@@ -56,7 +56,12 @@ export function useSegmentApi() {
    * @param segment segment
    */
   async function deleteSegment(segment: MediaSegmentDto) {
-    deleteJson(`MediaSegmentsApi/${segment.Id}`);
+    // The server expects itemId and type as query parameters (FromQuery)
+    const query: Map<string, string> = new Map();
+    if (segment.ItemId) query.set('itemId', String(segment.ItemId));
+    if (segment.Type !== undefined && segment.Type !== null) query.set('type', String(segment.Type));
+
+    await deleteJson(`MediaSegmentsApi/${segment.Id}`, undefined, query);
   }
 
   /**
