@@ -58,7 +58,7 @@ const themeList = computed(() => {
 });
 const providers = computed(() => {
   locale.value;
-  return ['default', 'skipper', 'chapter'].map((pr, idx) => {
+  return ['skipper', 'chapter'].map((pr, idx) => {
     return { label: t(`provider.${pr}`), value: idx };
   });
 });

@@ -20,10 +20,8 @@ export const useAppStore = defineStore('app', () => {
     let providerName;
     switch (providerIndex.value) {
       case 0:
-        return 'MediaSegments API';
-      case 1:
         return 'Intro Skipper';
-      case 2:
+      case 1:
         providerName = 'Chapter Segments Provider';
         break;
       default:
