@@ -137,7 +137,7 @@ export const useApiStore = defineStore('api', () => {
     try {
       jsonData = await response.json();
     } catch (error) {
-      appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 200 response' });
+      console.error("Failed to parse JSON from a 200 response", error);
     }
     appStore.notify({ type: 'positive', message: 'Segment created successfully' });
     return jsonData;
