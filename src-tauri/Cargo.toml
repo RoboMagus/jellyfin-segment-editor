@@ -1,8 +1,8 @@
 [package]
 name = "app"
-version = "0.1.0"
+version = "0.5.2"
 description = "Segment Editor for Jellyfin"
-authors = ["Endrl"]
+authors = ["Endrl", "Intro-Skipper contributors <intro-skipper.org>"]
 license = "Apache"
 repository = ""
 default-run = "app"
