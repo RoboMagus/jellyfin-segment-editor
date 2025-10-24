@@ -113,7 +113,7 @@ jobs:
           pnpm tauri android init
           pnpm tauri icon public/icon.png
 
-      - uses: intro-skipper/tauri-action@cf90756d8e4165db05c6fef93dc199e4501680da
+      - uses: intro-skipper/tauri-action@e96cf5404dc9a9a1293d6377904197c48b87f4b6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
