@@ -5,8 +5,14 @@ mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(debug_assertions)]
+    let devtools = tauri_plugin_devtools::init();
     let context = tauri::generate_context!();
     let mut builder = tauri::Builder::default();
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.plugin(devtools);
+    }
 
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 {
