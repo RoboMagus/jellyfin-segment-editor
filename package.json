@@ -1,6 +1,6 @@
 {
   "name": "jellyfin-segment-editor",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Manage Jellyfin Media Segments",
   "productName": "Jellyfin Segment Editor",
   "author": "endrl, Intro-Skipper contributors <intro-skipper.org>",
@@ -23,7 +23,7 @@
     "comlink": "^4.4.2",
     "hls.js": "^1.5.20",
     "pinia": "^3.0.1",
-    "pinia-plugin-persistedstate": "^4.2.0",
+    "pinia-plugin-persistedstate": "^4.7.0",
     "quasar": "^2.18.1",
     "vue": "^3.5.13",
     "vue-i18n": "^11.1.2",
