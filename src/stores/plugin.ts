@@ -13,17 +13,20 @@ export const usePluginStore = defineStore(
     const appStore = useAppStore();
     const { getPlugins } = useApi();
     const { validAuth } = storeToRefs(apiStore);
-    const { enableEdl } = storeToRefs(appStore);
     const { enableChapter } = storeToRefs(appStore);
+    const { enableEdl } = storeToRefs(appStore);
 
     const pluginIntroSkipperInstalled = ref(false);
     const pluginIntroSkipperVersion = ref('0.0.0');
 
+    const pluginChapterInstalled = ref(false);
+    const pluginChapterVersion = ref('0.0.0');
+
     const pluginEdlInstalled = ref(false);
     const pluginEdlVersion = ref('0.0.0');
 
-    const pluginChapterInstalled = ref(false);
-    const pluginChapterVersion = ref('0.0.0');
+    const pluginSegmentsApiInstalled = ref(false);
+    const pluginSegmentsApiVersion = ref('0.0.0');
 
     interface PluginCheck {
       name: string;
@@ -34,9 +37,9 @@ export const usePluginStore = defineStore(
     const testServerPlugins = async () => {
       const pluginChecks: PluginCheck[] = [
         {
-          name: 'EDL Creator',
-          installedRef: pluginEdlInstalled,
-          versionRef: pluginEdlVersion
+          name: 'Intro Skipper',
+          installedRef: pluginIntroSkipperInstalled,
+          versionRef: pluginIntroSkipperVersion
         },
         {
           name: 'Chapter Creator',
@@ -44,9 +47,14 @@ export const usePluginStore = defineStore(
           versionRef: pluginChapterVersion
         },
         {
-          name: 'Intro Skipper',
-          installedRef: pluginIntroSkipperInstalled,
-          versionRef: pluginIntroSkipperVersion
+          name: 'EDL Creator',
+          installedRef: pluginEdlInstalled,
+          versionRef: pluginEdlVersion
+        },
+        {
+          name: 'MediaSegments API',
+          installedRef: pluginSegmentsApiInstalled,
+          versionRef: pluginSegmentsApiVersion
         }
       ];
 
@@ -66,14 +74,14 @@ export const usePluginStore = defineStore(
       }
     };
 
-    // check if we should show edl handling
-    const showEdlBtn = () => {
-      return pluginEdlInstalled.value && enableEdl.value;
-    };
-
     // check if we should show chapter handling
     const showChapterBtn = () => {
       return pluginChapterInstalled.value && enableChapter.value;
+    };
+
+    // check if we should show edl handling
+    const showEdlBtn = () => {
+      return pluginEdlInstalled.value && enableEdl.value;
     };
 
     // When auth changed check for server plugins state
@@ -86,13 +94,15 @@ export const usePluginStore = defineStore(
     return {
       pluginIntroSkipperInstalled,
       pluginIntroSkipperVersion,
-      pluginEdlInstalled,
-      pluginEdlVersion,
-      showEdlBtn,
       pluginChapterInstalled,
       pluginChapterVersion,
-      showChapterBtn,
+      pluginEdlInstalled,
+      pluginEdlVersion,
+      pluginSegmentsApiInstalled,
+      pluginSegmentsApiVersion,
       testServerPlugins,
+      showChapterBtn,
+      showEdlBtn,
     };
   },
 );

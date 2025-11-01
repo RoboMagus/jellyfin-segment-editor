@@ -55,6 +55,7 @@ provider:
   title: Provider ID (Name)
   skipper: Intro Skipper
   chapter: Chapter Segments
+  segment: MediaSegments API
 plugin:
   edl:
     enable: EDL Support

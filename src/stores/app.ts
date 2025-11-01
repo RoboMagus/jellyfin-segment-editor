@@ -17,17 +17,16 @@ export const useAppStore = defineStore('app', () => {
   const enableChapter = ref(true);
 
   const providerId = computed(() => {
-    let providerName;
     switch (providerIndex.value) {
       case 0:
         return 'Intro Skipper';
       case 1:
-        providerName = 'Chapter Segments Provider';
-        break;
+        return 'Chapter Segments Provider';
+      case 2:
+        return 'MediaSegments API';
       default:
-        providerName = 'Intro Skipper';
+        return 'Intro Skipper';
     }
-    return providerName;
   });
 
   const setTheme = () => {

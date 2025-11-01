@@ -39,6 +39,23 @@
     </div>
     <div class="q-ma-sm">
       <a
+        href="https://github.com/intro-skipper/jellyfin-plugin-ms-chapter?tab=readme-ov-file#chapter-creator-for-jellyfin-mediasegments"
+        target="_blank"
+      >
+        <q-badge
+          :color="pluginStore.pluginChapterInstalled ? 'green' : 'orange'"
+          rounded
+          class="q-mr-sm"
+        />Chapter Creator
+        {{
+          pluginStore.pluginChapterInstalled
+            ? `(${pluginStore.pluginChapterVersion})`
+            : ''
+        }}
+      </a>
+    </div>
+    <div class="q-ma-sm">
+      <a
         href="https://github.com/intro-skipper/jellyfin-plugin-edl?tab=readme-ov-file#jellyfin-plugin-edl"
         target="_blank"
       >
@@ -56,17 +73,17 @@
     </div>
     <div class="q-ma-sm">
       <a
-        href="https://github.com/intro-skipper/jellyfin-plugin-ms-chapter?tab=readme-ov-file#chapter-creator-for-jellyfin-mediasegments"
+        href="https://github.com/intro-skipper/jellyfin-plugin-ms-api?tab=readme-ov-file#jellyfin-plugin-mediasegments-api"
         target="_blank"
       >
         <q-badge
-          :color="pluginStore.pluginChapterInstalled ? 'green' : 'orange'"
+          :color="pluginStore.pluginSegmentsApiInstalled ? 'green' : 'red'"
           rounded
           class="q-mr-sm"
-        />Chapter Creator
+        />MediaSegments API
         {{
-          pluginStore.pluginChapterInstalled
-            ? `(${pluginStore.pluginChapterVersion})`
+          pluginStore.pluginSegmentsApiInstalled
+            ? `(${pluginStore.pluginSegmentsApiVersion})`
             : ''
         }}
       </a>

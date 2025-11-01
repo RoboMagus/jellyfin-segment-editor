@@ -55,6 +55,7 @@ back: Retour
 provider:
   skipper: Intro Skipper
   chapter: Chapter Segments
+  segment: MediaSegments API
 plugin:
   edl:
     enable: EDL Soutien
