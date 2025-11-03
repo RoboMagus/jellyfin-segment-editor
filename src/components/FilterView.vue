@@ -66,6 +66,7 @@ const loadData = (isVisible: boolean) => {
   }
 }
 */
+itemStore.initCollections();
 
 const navigateTo = (item: BaseItemDto) => {
   let route = '';

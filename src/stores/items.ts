@@ -28,6 +28,10 @@ export const useItemsStore = defineStore('items', () => {
     if (coll.length) selectedCol.value = coll[0].ItemId as string;
   };
 
+  const initCollections = async () => {
+    if (selectedCol == '') getItemCollections();
+  };
+
   // reset localItems and get new one
   const getNewItems = async () => {
     const items = await getItems(selectedCol.value, 0);
@@ -117,6 +121,7 @@ export const useItemsStore = defineStore('items', () => {
     filteredItems,
     filterName,
     getItemCollections,
+    initCollections,
     getMoreItems,
     pushMoreItems,
   };
