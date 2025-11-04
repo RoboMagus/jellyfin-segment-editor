@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.5.4"
+version = "0.5.5"
 description = "Segment Editor for Jellyfin"
 authors = ["Endrl", "Intro-Skipper contributors <intro-skipper.org>"]
 license = "Apache"

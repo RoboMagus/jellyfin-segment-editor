@@ -1,6 +1,6 @@
 {
   "name": "jellyfin-segment-editor",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Manage Jellyfin Media Segments",
   "productName": "Jellyfin Segment Editor",
   "author": "endrl, Intro-Skipper contributors <intro-skipper.org>",

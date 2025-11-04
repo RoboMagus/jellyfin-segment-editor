@@ -5,8 +5,8 @@ import {
 } from '@jellyfin/sdk/lib/generated-client';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { useAppStore } from './app';
 import { useApiStore } from './api';
+import { useAppStore } from './app';
 
 export const useSegmentsStore = defineStore('segments', () => {
   const sapi = useSegmentApi();

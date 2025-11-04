@@ -31,7 +31,7 @@ export const useApiStore = defineStore('api', () => {
   const jellyfin = new Jellyfin({
     clientInfo: {
       name: 'Jellyfin Segment Editor',
-      version: '0.5.4',
+      version: '0.5.5',
     },
     deviceInfo: {
       name: 'Web Browser',
