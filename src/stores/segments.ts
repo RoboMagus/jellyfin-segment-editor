@@ -6,9 +6,11 @@ import {
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useAppStore } from './app';
+import { useApiStore } from './api';
 
 export const useSegmentsStore = defineStore('segments', () => {
   const sapi = useSegmentApi();
+  const api = useApiStore();
   const appStore = useAppStore();
   const localSegments = ref<Array<MediaSegmentDto>>([]);
 
@@ -34,7 +36,7 @@ export const useSegmentsStore = defineStore('segments', () => {
   const saveSegment = async (segment: MediaSegmentDto) => {
     const offseg = JSON.parse(JSON.stringify(segment));
     const result = await sapi.createSegment(offseg);
-    if (result) {
+    if (result || api.serverVersion.startsWith("10.11")) {
       // API call was successful, add the segment to the UI.
       localSegments.value.push(segment);
     } else {

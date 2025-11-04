@@ -7,6 +7,7 @@ import { useAppStore } from './app';
 export const useApiStore = defineStore('api', () => {
   const apiKey = ref(undefined);
   const serverAddress = ref('http://localhost:8096');
+  const serverVersion = ref('');
   const validConnection = ref(false);
   const validAuth = ref(false);
   const appStore = useAppStore();
@@ -134,10 +135,12 @@ export const useApiStore = defineStore('api', () => {
     }
 
     let jsonData;
-    try {
-      jsonData = await response.json();
-    } catch (error) {
-      appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 200 response' });
+    if (!serverVersion.value.startsWith("10.11")) {
+      try {
+        jsonData = await response.json();
+      } catch (error) {
+        appStore.notify({ type: 'negative', message: 'Failed to parse JSON from a 200 response' });
+      }
     }
     appStore.notify({ type: 'positive', message: 'Segment created successfully' });
     return jsonData;
@@ -207,6 +210,9 @@ export const useApiStore = defineStore('api', () => {
     validAuth.value = response.status != 401;
     validConnection.value = response.ok;
 
+    const jsonData = await response.json();
+    serverVersion.value = jsonData.Version;
+
     return response.ok && validAuth.value;
   };
 
@@ -232,6 +238,7 @@ export const useApiStore = defineStore('api', () => {
   return {
     apiKey,
     serverAddress,
+    serverVersion,
     validConnection,
     validAuth,
     toApi,
