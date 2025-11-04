@@ -9,5 +9,5 @@ export const useLoadStore = defineStore('loadup', () => {
   }
 },
 {
-  persist: false,
+  persist: false
 });

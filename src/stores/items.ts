@@ -31,8 +31,10 @@ export const useItemsStore = defineStore('items', () => {
   };
 
   const initCollections = async () => {
-    if (loadStore.hasLoaded == '') getItemCollections();
-    loadStore.hasLoaded = "true";
+    if (loadStore.hasLoaded == '') {
+      loadStore.hasLoaded = "true";
+      collections.value = await getCollections();
+    }
   };
 
   // reset localItems and get new one

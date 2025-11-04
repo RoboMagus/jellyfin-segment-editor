@@ -52,17 +52,9 @@ export const useApiStore = defineStore('api', () => {
     endpoint: string,
     query?: Map<string, string>,
   ) => {
-    let headers: HeadersInit = {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    };
-    if (pluginAuthHeader) {
-      headers = Object.assign(headers, pluginAuthHeader);
-    }
     const reqInit: RequestInit = {
       method: 'GET',
-      headers: headers,
+      headers: pluginAuthHeader,
     };
 
     const response = await fetch(buildUrl(endpoint, query), reqInit);
