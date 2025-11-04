@@ -36,7 +36,9 @@ export const useSegmentsStore = defineStore('segments', () => {
   const saveSegment = async (segment: MediaSegmentDto) => {
     const offseg = JSON.parse(JSON.stringify(segment));
     const result = await sapi.createSegment(offseg);
-    if (result || api.serverVersion.startsWith("10.11")) {
+    if (api.serverVersion.startsWith("10.11")) {
+      await getNewSegmentsById(segment.ItemId)
+    } else if (result) {
       // API call was successful, add the segment to the UI.
       localSegments.value.push(segment);
     } else {
