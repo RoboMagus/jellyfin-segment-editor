@@ -2,6 +2,7 @@ import { defineStore, storeToRefs } from 'pinia';
 import { ref, watch, computed } from 'vue';
 import { useApi } from 'src/composables/api';
 import { useApiStore } from './api';
+import { useLoadStore } from './loadup';
 import {
   BaseItemDto,
   BaseItemKind,
@@ -11,6 +12,7 @@ import {
 export const useItemsStore = defineStore('items', () => {
   const { getItems, getCollections } = useApi();
   const apiStore = useApiStore();
+  const loadStore = useLoadStore();
   const { validConnection, validAuth } = storeToRefs(apiStore);
 
   const collections = ref<Array<VirtualFolderInfo>>([]);
@@ -29,7 +31,8 @@ export const useItemsStore = defineStore('items', () => {
   };
 
   const initCollections = async () => {
-    if (selectedCol == '') getItemCollections();
+    if (loadStore.hasLoaded == '') getItemCollections();
+    loadStore.hasLoaded = "true";
   };
 
   // reset localItems and get new one
