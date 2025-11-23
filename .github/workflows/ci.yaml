@@ -17,31 +17,89 @@ jobs:
             args: ''
           - platform: 'windows-latest'
             args: ''
+          - platform: 'ubuntu-latest'
+            args: '--target aarch64' # arm64-v8a
+            android: true
+            arch: 'arm64-v8a'
+          - platform: 'ubuntu-latest'
+            args: '--target armv7' # armeabi-v7a
+            android: true
+            arch: 'armeabi-v7a'
+          - platform: 'ubuntu-latest'
+            args: '--target x86_64'
+            android: true
+            arch: 'x86_64'
+          - platform: 'ubuntu-latest'
+            args: '--target i686' # x86
+            android: true
+            arch: 'x86'
 
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup node
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.x.x
+
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: install Rust stable
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || matrix.arch == 'arm64-v8a' && 'aarch64-linux-android' || matrix.arch == 'armeabi-v7a' && 'armv7-linux-androideabi' || matrix.arch == 'x86_64' && 'x86_64-linux-android' || matrix.arch == 'x86' && 'i686-linux-android' || '' }}
 
-      - name: install dependencies (ubuntu only)
+      - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad
 
-      - name: install frontend dependencies
-        run: npm install # change this to npm, pnpm or bun depending on which one you use.
+      - name: Setup Java
+        if: matrix.android
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Setup Android SDK
+        if: matrix.android
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Android NDK
+        if: matrix.android
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r26d
+          link-to-sdk: true
+
+      - name: Install packages
+        run: pnpm install # change this to npm, pnpm or bun depending on which one you use.
+
+      - name: Init Android
+        if: matrix.android
+        env:
+          NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          pnpm add -D @tauri-apps/cli
+          pnpm tauri android init
+          pnpm tauri icon public/icon.png
+
+      - uses: intro-skipper/tauri-action@e96cf5404dc9a9a1293d6377904197c48b87f4b6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        with:
+          tagName: ${{ github.ref_name }} # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'Jellyfin Segment Editor __VERSION__'
+          releaseBody: ${{ needs.generate-changelog.outputs.release_body }}
+          releaseDraft: true
+          prerelease: false
+          mobile: ${{ matrix.android || matrix.ios }}
+          args: ${{ matrix.args }}
